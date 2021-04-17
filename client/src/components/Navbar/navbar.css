@@ -1,0 +1,23 @@
+.horizontal {
+  margin: auto;
+  padding: 0.9rem 0;
+  overflow: hidden;
+  background-color: #333;
+  height: 1rem;
+}
+
+.navbar_item {
+  color: #be5700;
+  font-size: 1.2rem;
+  display: inline;
+  font-weight: bold;
+  padding: 1rem;
+}
+
+.navbar_item:hover {
+  background-color: grey;
+}
+
+.navbar_authentication_items {
+  float: right;
+}
