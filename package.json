@@ -8,7 +8,6 @@
     "server": "nodemon ./index.js --exec babel-node -e js",
     "client": "cd client && npm start",
     "start": " concurrently \"npm:server\" \"npm:client\" "
-
   },
   "author": "Jacky Chen",
   "license": "ISC",
