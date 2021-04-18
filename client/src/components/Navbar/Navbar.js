@@ -1,7 +1,8 @@
 import react,{useState,useEffect} from 'react';
 import './navbar.css'
-import {WButton, WNavItem} from 'wt-frontend'
 
+import {WButton, WNavItem} from 'wt-frontend'
+import {Redirect} from 'react-router-dom';
 
 
 
@@ -20,10 +21,11 @@ const LoggedIn =(props) =>{
 
 
 const LoggedOut =(props) =>{
+  
   return (
     <div>
-    <a className ="navbar_item">Create An Account</a>
-    <a className ="navbar_item">Login</a>
+    <a className ="navbar_item" onClick ={props.setShowCreate}>Create An Account</a>
+    <a className ="navbar_item" onClick ={props.setShowLogin}>Login</a>
     </div>
   )
 }
@@ -35,8 +37,7 @@ export const Navbar = (props) =>{
     <div className ="horizontal">
       <a className ="navbar_item">Place Logo Here</a>
       <div className ="navbar_authentication_items">
-        {props.auth === false ? <LoggedOut/>:<LoggedIn name ={props.name}/>}
-      
+        {props.auth === false ? <LoggedOut setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.name}/>}
       </div>
       
     </div>
