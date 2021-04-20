@@ -1,15 +1,26 @@
 import react,{useState,useEffect} from 'react';
 import './navbar.css'
-
+import { LOGOUT } from '../../cache/mutations';
 import {WButton, WNavItem} from 'wt-frontend'
 import {Redirect} from 'react-router-dom';
-
+import { useMutation, useApolloClient }     from '@apollo/client';
 
 
 const LoggedIn =(props) =>{
-  const handleLogout = async (e) =>{
-    console.log('Logged out');
-  }
+  
+  const client = useApolloClient();
+	const [Logout] = useMutation(LOGOUT);
+
+    const handleLogout = async (e) => {
+      // debugger;
+        Logout();
+
+        const { data } = await props.fetchUser();
+        if (data) {
+            await client.resetStore();
+        }
+        window.location ="/welcome";
+    };
 
   return (
     <div>
@@ -37,7 +48,7 @@ export const Navbar = (props) =>{
     <div className ="horizontal">
       <a className ="navbar_item">Place Logo Here</a>
       <div className ="navbar_authentication_items">
-        {props.auth === false ? <LoggedOut setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.name}/>}
+        {props.auth === false ? <LoggedOut setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} fetchUser ={props.fetchUser}/>}
       </div>
       
     </div>

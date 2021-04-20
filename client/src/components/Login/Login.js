@@ -3,11 +3,13 @@ import { LOGIN } 			from '../../cache/mutations';
 import { useMutation }    	from '@apollo/client';
 
 import { WModal, WMHeader, WMMain, WMFooter, WButton, WInput } from 'wt-frontend';
+import { Redirect } from 'react-router';
 
 const Login = (props) => {
 	const [input, setInput] = useState({ email: '', password: '' });
 	const [loading, toggleLoading] = useState(false);
 	const [showErr, displayErrorMsg] = useState(false);
+	const [isLoggedIn,setIsLoggedIn] = useState(false);
 	const errorMsg = "Email/Password not found.";
 	const [Login] = useMutation(LOGIN);
 
@@ -29,11 +31,12 @@ const Login = (props) => {
 			props.fetchUser();
 			// props.refetchTodos();
 			toggleLoading(false)
-			props.setShowLogin(false)
+			props.setShowLogin(false);
+			window.location ="/your_maps";
 		};
 	};
 
-
+	
 	return (
         // Replace div with WModal
 
