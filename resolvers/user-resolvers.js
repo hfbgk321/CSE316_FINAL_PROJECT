@@ -78,6 +78,42 @@ module.exports = {
 			res.clearCookie('refresh-token');
 			res.clearCookie('access-token');
 			return true;
+		},
+
+		update: async (_,args,{req}) =>{
+				const {email,name,current_password,new_password} = args;
+				const _id = new ObjectId(req.userId);
+				const alreadyExists = await User.findOne({email:email});
+
+				if(alreadyExists){
+					console.log('User with that email already registered.');
+					return(new User({
+						_id: '',
+						name:'',
+						email: 'already exists', 
+						password: ''}));
+				}
+
+				const user = await User.findOne({_id:_id});
+				const valid = await bcrypt.compare(current_password, user.password);
+				if(!valid){
+					return(new User({
+						_id: 'invalid password',
+						name:'invalid password',
+						email: 'invalid password', 
+						password: 'invalid password'}));
+				}
+
+				const hashed_password = await bcrypt.hash(new_password,10);
+				let updated_user = await User.findByIdAndUpdate(_id,{email:email,password:hashed_password});
+				if(updated_user){
+					return updated_user;
+				}
+				return(new User({
+					_id: 'unable to change',
+					name:'unable to change',
+					email: 'unable to change', 
+					password: 'unable to change'}));
 		}
 	}
 }

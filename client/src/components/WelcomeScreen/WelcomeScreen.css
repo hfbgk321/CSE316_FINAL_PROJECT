@@ -1,0 +1,13 @@
+.welcome_screen_container {
+  margin-top: 7rem;
+}
+.data_mapper_introduction_row {
+  margin-top: 3rem;
+}
+.data_mapper_image_row {
+  /* margin-top: 3rem; */
+}
+.globe_img {
+  height: 30rem;
+  width: auto;
+}

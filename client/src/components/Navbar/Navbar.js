@@ -12,7 +12,6 @@ const LoggedIn =(props) =>{
 	const [Logout] = useMutation(LOGOUT);
 
     const handleLogout = async (e) => {
-      // debugger;
         Logout();
 
         const { data } = await props.fetchUser();
@@ -25,7 +24,7 @@ const LoggedIn =(props) =>{
   return (
     
     <>
-      <Nav.Link href="#home">{props.name}</Nav.Link>
+      <Nav.Link href="#home" onClick ={props.setShowUpdate}>{props.name}</Nav.Link>
       <Nav.Link href="#link" onClick ={handleLogout}>Logout</Nav.Link>
     </>
   )
@@ -51,7 +50,7 @@ export const NavbarComponent = (props) =>{
       <Container>
         <Navbar.Brand href="#">Navbar</Navbar.Brand>
         <Nav className ="ml-auto">
-        {props.auth === false ? <LoggedOut setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} fetchUser ={props.fetchUser}/>}
+        {props.auth === false ? <LoggedOut setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} fetchUser ={props.fetchUser} setShowUpdate ={props.setShowUpdate}/>}
         </Nav>
         
       </Container>

@@ -7,7 +7,6 @@ export const PrivateRouteYourMap = ({ component: Component,fetchUser,user,isInit
 
   return (
   <Route {...rest} render={(props)=>{
-    debugger;
     console.log(user);
     if(!isInit) return "";
     if(user === null){
