@@ -4,7 +4,7 @@ import { LOGOUT } from '../../cache/mutations';
 import {WButton, WNavItem} from 'wt-frontend'
 import {Redirect} from 'react-router-dom';
 import { useMutation, useApolloClient }     from '@apollo/client';
-
+import {Container,Navbar,Nav} from 'react-bootstrap';
 
 const LoggedIn =(props) =>{
   
@@ -23,34 +23,38 @@ const LoggedIn =(props) =>{
     };
 
   return (
-    <div>
-    <a className ="navbar_item">{props.name}</a>
-    <a className ="navbar_item" onClick ={handleLogout}> Logout</a>
-    </div>
+    
+    <>
+      <Nav.Link href="#home">{props.name}</Nav.Link>
+      <Nav.Link href="#link" onClick ={handleLogout}>Logout</Nav.Link>
+    </>
   )
 }
 
 
 const LoggedOut =(props) =>{
-  
   return (
-    <div>
-    <a className ="navbar_item" onClick ={props.setShowCreate}>Create An Account</a>
-    <a className ="navbar_item" onClick ={props.setShowLogin}>Login</a>
-    </div>
+    <>
+      <Nav.Link href="#home" onClick ={props.setShowCreate}>Create An Account</Nav.Link>
+      <Nav.Link href="#link" onClick ={props.setShowLogin}>Login</Nav.Link>
+    </>
   )
+  
 }
 
 
-export const Navbar = (props) =>{
+export const NavbarComponent = (props) =>{
 
   return (
-    <div className ="horizontal">
-      <a className ="navbar_item">Place Logo Here</a>
-      <div className ="navbar_authentication_items">
+
+    <Navbar expand="lg" variant="light" bg="light">
+      <Container>
+        <Navbar.Brand href="#">Navbar</Navbar.Brand>
+        <Nav className ="ml-auto">
         {props.auth === false ? <LoggedOut setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} fetchUser ={props.fetchUser}/>}
-      </div>
-      
-    </div>
+        </Nav>
+        
+      </Container>
+    </Navbar>
   )
 }

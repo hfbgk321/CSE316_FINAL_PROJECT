@@ -7,11 +7,13 @@ import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen";
 import {YourMaps} from './components/yourmaps/YourMaps';
 import {PrivateRouteYourMap} from './PrivateRoutes/PrivateRouteYourMap';
 import react,{useEffect, useState} from 'react';
-import CreateAccount from './components/CreateAccount/CreateAccount';
-import Login from './components/Login/Login';
-import {Navbar} from './components/Navbar/Navbar';
-import { UserInputError } from 'apollo-server-errors';
 
+import {LoginBootStrap} from'./components/Modals/Login/LoginBootstrap';
+
+import {CreateAccountBootstrap} from './components/Modals/CreateAccount/CreateAccountBootstrap';
+import {NavbarComponent} from './components/Navbar/Navbar';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Container,Row ,Col} from 'react-bootstrap';
 
 export const App = () => {
 
@@ -52,9 +54,12 @@ export const App = () => {
 
 
   return (
-    <div>
+      <Container fluid>
+        <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} setShowLogin ={setShowLogin} fetchUser={refetch} user ={user}/>
+        <LoginBootStrap showLogin ={showLogin} setShowLogin ={setShowLogin} fetchUser ={refetch}/>
+        <CreateAccountBootstrap showCreate ={showCreate} setShowCreate ={setShowCreate} fetchUser ={refetch}/>
+      
       <BrowserRouter>
-      <Navbar auth = {user !== null} setShowCreate ={setShowCreate} setShowLogin ={setShowLogin} fetchUser={refetch} user ={user}/>
       <Switch>
       <Redirect exact from ="/" to={{pathname:"/welcome"}}/>
         <Route exact path="/welcome" component={WelcomeScreen} user ={user} fetchUser ={refetch}/>
@@ -66,15 +71,7 @@ export const App = () => {
 
       </Switch>
     </BrowserRouter>
-       {
-        showCreate && <CreateAccount fetchUser={refetch} setShowCreate ={setShowCreate}/>
-      }
-      {
-        showLogin && <Login fetchUser ={refetch} setShowLogin ={setShowLogin}/>
-      }
-    </div>
-    
-    
+      </Container>
   );
   }
 
