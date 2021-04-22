@@ -38,5 +38,17 @@ export const UPDATE = gql`
       name
     }
   } 
+`;
 
-`
+export const CREATE_MAP = gql`
+  mutation AddNewMap($map: MapInput){
+    addNewMap(map:$map){
+      _id
+	    children
+	    name
+	    ownerId
+    }
+  }
+`;
+
+

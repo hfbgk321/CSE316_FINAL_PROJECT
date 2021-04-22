@@ -13,6 +13,18 @@ module.exports ={
     }
   },
   Mutation:{
+    addNewMap: async (_,args,{req}) =>{
+      let {map} = args;
+      console.log(map);
+      let ownerId = new ObjectId(req.userId);
+      let _id = new ObjectId();
+      map.ownerId = ownerId;
+      map._id = _id;
+      let new_map = new Map(map);
 
+      const saved = await new_map.save();
+      console.log(saved);
+      return saved;
+    }
   }
 }

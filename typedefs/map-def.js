@@ -13,7 +13,7 @@ const typeDefs = gql `
 
 	}
 	extend type Mutation {
-		addNewMap(map: MapInput): String!
+		addNewMap(map: MapInput): Map!
     deleteMap(_id:String!): Boolean
     updateMapName(_id:String!, name: String!): String
 
@@ -23,7 +23,7 @@ const typeDefs = gql `
 	_id: String
 	children: [Int]
 	name: String
-	ownerid : String
+	ownerId : String
 }
 
 `;

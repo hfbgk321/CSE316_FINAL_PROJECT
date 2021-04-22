@@ -9,3 +9,15 @@ export const GET_DB_USER = gql`
 		}
 	}
 `;
+
+
+export const GET_ALL_MAPS = gql`
+  query GetAllMaps {
+		getAllMaps {
+			_id
+			children
+    	name
+    	ownerId
+		}
+	}
+`;

@@ -51,7 +51,7 @@ export const UpdateAccount = (props) =>{
         return;
       }
 			else {
-				props.fetchUser();
+				await props.fetchUser();
         window.location ="/your_maps";
 			}
 			props.setShowUpdate(false);

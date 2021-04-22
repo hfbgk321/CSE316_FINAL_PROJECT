@@ -41,7 +41,7 @@ export const CreateAccountBootstrap = (props) =>{
         return;
 			}
 			else {
-				props.fetchUser();
+				await props.fetchUser();
         window.location ="/your_maps";
 			}
 			props.setShowCreate(false);

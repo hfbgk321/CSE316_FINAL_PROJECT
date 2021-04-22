@@ -24,8 +24,8 @@ const LoggedIn =(props) =>{
   return (
     
     <>
-      <Nav.Link href="#home" onClick ={props.setShowUpdate}>{props.name}</Nav.Link>
-      <Nav.Link href="#link" onClick ={handleLogout}>Logout</Nav.Link>
+      <Nav.Link onClick ={props.setShowUpdate}>{props.name}</Nav.Link>
+      <Nav.Link onClick ={handleLogout}>Logout</Nav.Link>
     </>
   )
 }
@@ -34,8 +34,8 @@ const LoggedIn =(props) =>{
 const LoggedOut =(props) =>{
   return (
     <>
-      <Nav.Link href="#home" onClick ={props.setShowCreate}>Create An Account</Nav.Link>
-      <Nav.Link href="#link" onClick ={props.setShowLogin}>Login</Nav.Link>
+      <Nav.Link onClick ={props.setShowCreate}>Create An Account</Nav.Link>
+      <Nav.Link onClick ={props.setShowLogin}>Login</Nav.Link>
     </>
   )
   
@@ -48,7 +48,7 @@ export const NavbarComponent = (props) =>{
 
     <Navbar expand="lg" variant="light" bg="light">
       <Container>
-        <Navbar.Brand href="#">Navbar</Navbar.Brand>
+        <Navbar.Brand >Navbar</Navbar.Brand>
         <Nav className ="ml-auto">
         {props.auth === false ? <LoggedOut setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} fetchUser ={props.fetchUser} setShowUpdate ={props.setShowUpdate}/>}
         </Nav>

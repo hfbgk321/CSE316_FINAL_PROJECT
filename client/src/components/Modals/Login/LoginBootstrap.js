@@ -27,7 +27,7 @@ export const LoginBootStrap = (props) =>{
 			return;
 		}
 		if (data) {
-			props.fetchUser();
+			await props.fetchUser();
 			// props.refetchTodos();
 			toggleLoading(false)
 			props.setShowLogin(false);
