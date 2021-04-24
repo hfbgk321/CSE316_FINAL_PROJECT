@@ -7,7 +7,7 @@ const regionSchema = new Schema(
 			required: true
 		},
     children:{
-      type:[Number],
+      type:[String],
       required:true
     },
     name:{
@@ -34,6 +34,10 @@ const regionSchema = new Schema(
       type:String,
       required:true
     },
+    isParentAMap:{
+      type:Boolean,
+      required:true
+    }
 	
 	},
 	{ timestamps: true }

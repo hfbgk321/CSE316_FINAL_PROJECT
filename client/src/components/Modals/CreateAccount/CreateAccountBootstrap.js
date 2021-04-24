@@ -3,6 +3,7 @@ import {Modal,Button,Form} from 'react-bootstrap';
 import {REGISTER} from '../../../cache/mutations';
 import {useMutation} from '@apollo/client';
 
+
 export const CreateAccountBootstrap = (props) =>{
   const [input, setInput] = useState({ email: '', password: '', name:"" });
 	const [loading, toggleLoading] = useState(false);
@@ -42,7 +43,7 @@ export const CreateAccountBootstrap = (props) =>{
 			}
 			else {
 				await props.fetchUser();
-        window.location ="/your_maps";
+        props.history.push("/your_maps");
 			}
 			props.setShowCreate(false);
 

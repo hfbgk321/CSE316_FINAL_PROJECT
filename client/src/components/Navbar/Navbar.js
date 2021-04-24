@@ -18,7 +18,7 @@ const LoggedIn =(props) =>{
         if (data) {
             await client.resetStore();
         }
-        window.location ="/welcome";
+        props.history.push("/your_maps");
     };
 
   return (
@@ -50,7 +50,7 @@ export const NavbarComponent = (props) =>{
       <Container>
         <Navbar.Brand >Navbar</Navbar.Brand>
         <Nav className ="ml-auto">
-        {props.auth === false ? <LoggedOut setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} fetchUser ={props.fetchUser} setShowUpdate ={props.setShowUpdate}/>}
+        {props.auth === false ? <LoggedOut history = {props.history} setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} history ={props.history} fetchUser ={props.fetchUser} setShowUpdate ={props.setShowUpdate}/>}
         </Nav>
         
       </Container>

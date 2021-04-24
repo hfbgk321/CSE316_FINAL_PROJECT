@@ -2,21 +2,24 @@ import './App.css';
 import {useQuery} from '@apollo/client';
 import * as queries from './cache/queries';
 import {jsTPS} from './utils/jsTPS';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route, Redirect,useHistory } from 'react-router-dom';
 import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen";
 import {YourMaps} from './components/yourmaps/YourMaps';
-import {PrivateRouteYourMap} from './PrivateRoutes/PrivateRouteYourMap';
+import {PrivateRoute} from './PrivateRoutes/PrivateRoute';
+
 import react,{useEffect, useState} from 'react';
+
 
 import {LoginBootStrap} from'./components/Modals/Login/LoginBootstrap';
 import {CreateAccountBootstrap} from './components/Modals/CreateAccount/CreateAccountBootstrap';
 import {UpdateAccount} from './components/Modals/UpdateAccount/UpdateAccount';
 import {NavbarComponent} from './components/Navbar/Navbar';
+import {RegionSpreadSheet} from './components/SpreadSheet/RegionSpreadSheet';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container,Row ,Col} from 'react-bootstrap';
 
 export const App = () => {
-
+  let history = useHistory();
   const[showCreate,toggleShowCreate] = useState(false);
   const[showLogin, toggleShowLogin] = useState(false);
   const[showUpdate,toggleShowUpdate] = useState(false);
@@ -64,23 +67,19 @@ export const App = () => {
 
   return (
       <Container fluid>
-        <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} setShowLogin ={setShowLogin} setShowUpdate ={setShowUpdate} fetchUser={refetch} user ={user}/>
-        <LoginBootStrap showLogin ={showLogin} setShowLogin ={setShowLogin} fetchUser ={refetch}/>
-        <CreateAccountBootstrap showCreate ={showCreate} setShowCreate ={setShowCreate} fetchUser ={refetch}/>
-        <UpdateAccount showUpdate ={showUpdate} setShowUpdate ={setShowUpdate} fetchUser ={refetch} user ={user} isInit ={isInit}/>
-      
-      <BrowserRouter>
+      <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} setShowLogin ={setShowLogin} setShowUpdate ={setShowUpdate} fetchUser={refetch} user ={user} history={history} />
+        <LoginBootStrap showLogin ={showLogin} setShowLogin ={setShowLogin} fetchUser ={refetch} history={history}/>
+        <CreateAccountBootstrap showCreate ={showCreate} setShowCreate ={setShowCreate} fetchUser ={refetch} history={history} />
+        <UpdateAccount showUpdate ={showUpdate} setShowUpdate ={setShowUpdate} fetchUser ={refetch} user ={user} isInit ={isInit} history={history}/>
       <Switch>
       <Redirect exact from ="/" to={{pathname:"/welcome"}}/>
-        <Route exact path="/welcome" component={WelcomeScreen} user ={user} fetchUser ={refetch}/>
+        <Route exact path="/welcome" component={WelcomeScreen} user ={user} fetchUser ={refetch} history={history}/>
 
-        <PrivateRouteYourMap user = {user}  fetchUser ={refetch} path="/your_maps" isInit ={isInit} component ={YourMaps}/>
+        <PrivateRoute user = {user}  fetchUser ={refetch} exact path="/your_maps" isInit ={isInit} component ={YourMaps} history={history}/>
 
-       
-    
-
+        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id" isInit ={isInit} component ={RegionSpreadSheet} history={history}/>
+        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id/:region_id" isInit ={isInit} component ={RegionSpreadSheet} history={history}/>
       </Switch>
-    </BrowserRouter>
       </Container>
   );
   }

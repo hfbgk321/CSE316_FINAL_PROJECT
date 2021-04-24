@@ -4,13 +4,18 @@ import {Container,Button,Row,Col,ListGroup} from 'react-bootstrap';
 import globe from '../../images/globe.jpg';
 import "./YourMaps.css";
 import * as queries from '../../cache/queries';
-import {useQuery} from '@apollo/client';
+import {useQuery,useMutation} from '@apollo/client';
+import {DELETE_MAP} from '../../cache/mutations';
 import {CreateMap} from '../Modals/CreateMap/CreateMap';
+
+import {MapItem} from '../yourmaps/MapItem/MapItem';
+
 export const YourMaps =(props) =>{
   const [showCreateMap,toggleShowCreateMap] = useState(false);
   const [isInit,setIsInit] = useState(false);
   const [maps,setMaps] = useState([]);
   const {loading, error, data, refetch} = useQuery(queries.GET_ALL_MAPS);
+  const [DeleteMap] = useMutation(DELETE_MAP);
 
   useEffect(() =>{
     if(error) { console.log(error); }
@@ -29,6 +34,23 @@ export const YourMaps =(props) =>{
   const setShowCreateMap =()=>{
     toggleShowCreateMap(!showCreateMap);
   }
+
+  const handleDeleteMap = async (_id) =>{
+    let {loading, errors,data} = await DeleteMap({variables:{_id:_id}});
+    if(loading) console.log(loading);
+    if(errors){
+      console.log(errors.message);
+      return;
+    }
+
+    if(data){
+      let {deleteMap} = data;
+      if(deleteMap){
+        await refetch();
+      }
+    }
+  }
+
   
   return (
     <Container>
@@ -37,7 +59,9 @@ export const YourMaps =(props) =>{
         <Col>
         <ListGroup variant="flush" className ="map_list_group">
             {maps.map((map,key)=>{
-              return <ListGroup.Item className = "map_list_item" key ={key}>{map.name}</ListGroup.Item>
+              return (
+               <MapItem key ={key} map = {map} handleDeleteMap = {handleDeleteMap} fetchMaps ={refetch}/>
+              )
             })}
         </ListGroup>
         </Col>

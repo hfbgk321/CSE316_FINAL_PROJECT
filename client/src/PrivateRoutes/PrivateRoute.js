@@ -3,7 +3,7 @@ import {Redirect,Route} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import * as queries from '../cache/queries';
 import YourMaps from '../components/yourmaps/YourMaps';
-export const PrivateRouteYourMap = ({ component: Component,fetchUser,user,isInit, ...rest }) => {
+export const PrivateRoute = ({ component: Component,fetchUser,user,isInit,history, ...rest }) => {
 
   return (
   <Route {...rest} render={(props)=>{
@@ -12,7 +12,7 @@ export const PrivateRouteYourMap = ({ component: Component,fetchUser,user,isInit
     if(user === null){
       return <Redirect to ={{pathname:"/welcome", state:{from: props.location}}}/>
     }else{
-      return <Component auth={true} {...props}/>
+      return <Component history = {history} auth={true} {...props}/>
     }
     
   }}/>

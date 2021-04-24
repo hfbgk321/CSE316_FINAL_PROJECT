@@ -28,7 +28,6 @@ export const UpdateAccount = (props) =>{
 			}
 		}
 		const { loading, error, data } = await Update({ variables: { ...input } });
-    debugger;
 		if (loading) { toggleLoading(true) };
 		if (error) { 
 			console.log(error.message);
@@ -52,7 +51,7 @@ export const UpdateAccount = (props) =>{
       }
 			else {
 				await props.fetchUser();
-        window.location ="/your_maps";
+        props.history.push("/your_maps");
 			}
 			props.setShowUpdate(false);
 

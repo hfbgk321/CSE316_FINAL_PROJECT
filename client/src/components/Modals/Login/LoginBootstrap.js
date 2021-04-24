@@ -3,8 +3,10 @@ import {Modal,Button,Form} from 'react-bootstrap';
 import {LOGIN} from '../../../cache/mutations';
 import { useMutation, useApolloClient }     from '@apollo/client';
 
-export const LoginBootStrap = (props) =>{
+import {useHistory} from 'react-router-dom';
 
+export const LoginBootStrap = (props) =>{
+  
   const [input, setInput] = useState({ email: '', password: '' });
 	const [loading, toggleLoading] = useState(false);
 	const [showErr, displayErrorMsg] = useState(false);
@@ -31,7 +33,7 @@ export const LoginBootStrap = (props) =>{
 			// props.refetchTodos();
 			toggleLoading(false)
 			props.setShowLogin(false);
-			window.location ="/your_maps";
+			props.history.push("/your_maps");
 		};
 	};
 

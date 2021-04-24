@@ -7,7 +7,7 @@ const mapSchema = new Schema(
 			required: true
 		},
     children :{
-      type:[Number],
+      type:[String],
        required:true
     },
     name:{

@@ -21,3 +21,48 @@ export const GET_ALL_MAPS = gql`
 		}
 	}
 `;
+
+
+
+export const GET_SUBREGION_BY_ID = gql`
+	query GetRegionsByParentId($parent_id:String!){
+		getRegionsByParentId(parent_id:$parent_id){
+			_id
+			children
+    	name
+    	capital
+    	leader
+    	flag
+    	landmarks
+    	parent_id
+		}
+	}
+`;
+
+
+export const GET_MAP_BY_ID = gql`
+	query GetMapById($_id:String){
+		getMapById(_id:$_id){
+			_id
+			children
+    	name
+    	ownerId
+		}
+	}
+`;
+
+export const GET_REGION_BY_ID = gql`
+	query GetRegionById($_id:String){
+		getRegionById(_id:$_id){
+			_id
+			children
+    	name
+    	capital
+    	leader
+    	flag
+    	landmarks
+    	parent_id
+		}
+	}
+
+`;
