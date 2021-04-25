@@ -64,5 +64,13 @@ export const GET_REGION_BY_ID = gql`
     	parent_id
 		}
 	}
+`;
 
+export const GET_PREVIOUS_PATHS = gql`
+	query GetRegionPaths($_id:String){
+		getRegionPaths(_id:$_id){
+			name
+    _id
+		}
+	}
 `;

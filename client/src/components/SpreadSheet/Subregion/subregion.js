@@ -9,7 +9,6 @@ export const Subregion = (props) =>{
   }
 
   const handleNavigate = () =>{
-    debugger;
     let current_path = props.history.location.pathname+"";
     //props.history.push(`${current_path}/${props._id}`);
     let path = current_path.split("/");

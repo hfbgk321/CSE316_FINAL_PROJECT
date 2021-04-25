@@ -16,6 +16,7 @@ const typeDefs = gql `
     getRegionById(_id:String): Region
     getRegionsByParentId(parent_id:String!): [Region]
     getAllRegions:[Region!]
+		getRegionPaths(_id:String):[PathInfo]
 
 	}
 	extend type Mutation {
@@ -35,8 +36,11 @@ const typeDefs = gql `
 	landmarks: [String]
 	parent_id: String
 	isParentAMap: Boolean
+},
+type PathInfo {
+	_id:String
+	name:String
 }
-
 `;
 
 module.exports = { typeDefs: typeDefs }

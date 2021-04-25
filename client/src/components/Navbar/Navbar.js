@@ -41,16 +41,38 @@ const LoggedOut =(props) =>{
   
 }
 
+const handlePreviousLink = (key,_id,map_id) =>{
+  if(map_id ==_id){
+    window.location =`/your_maps/${_id}`;
+  }else{
+    window.location =`/your_maps/${map_id}/${_id}`;
+  }
+}
+
 
 export const NavbarComponent = (props) =>{
-
+  debugger;
+  if(!props.isInit){
+    return "";
+  }
+  console.log(props.prevPaths);
   return (
 
     <Navbar expand="lg" variant="light" bg="light">
       <Container>
         <Navbar.Brand >Navbar</Navbar.Brand>
         <Nav className ="ml-auto">
+        {props.prevPaths.map((path,key)=>{
+          return (
+            <Nav.Item>
+            <Nav.Link eventKey="link-1" onClick ={() =>
+            handlePreviousLink(key,path._id,props.prevPaths[props.prevPaths.length-1]._id)}>{path.name}</Nav.Link>
+          </Nav.Item>
+          )
+           
+        })}
         {props.auth === false ? <LoggedOut history = {props.history} setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} history ={props.history} fetchUser ={props.fetchUser} setShowUpdate ={props.setShowUpdate}/>}
+        
         </Nav>
         
       </Container>

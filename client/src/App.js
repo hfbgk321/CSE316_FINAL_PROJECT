@@ -26,6 +26,7 @@ export const App = () => {
   const[user,setUser] = useState(null);
   const [isInit,setIsInit] = useState(false);
   let transactionstack = new jsTPS();
+  const [prevPaths,setPrevPaths] = useState([]);
   const {loading, error, data, refetch} = useQuery(queries.GET_DB_USER);
 
   useEffect(() =>{
@@ -64,10 +65,14 @@ export const App = () => {
     
   }
 
+  const handleSetPaths = (paths) =>{
+    setPrevPaths(paths);
+  }
+
 
   return (
       <Container fluid>
-      <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} setShowLogin ={setShowLogin} setShowUpdate ={setShowUpdate} fetchUser={refetch} user ={user} history={history} />
+      <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} prevPaths = {prevPaths} setShowLogin ={setShowLogin} setShowUpdate ={setShowUpdate} fetchUser={refetch} user ={user} history={history} isInit ={isInit}/>
         <LoginBootStrap showLogin ={showLogin} setShowLogin ={setShowLogin} fetchUser ={refetch} history={history}/>
         <CreateAccountBootstrap showCreate ={showCreate} setShowCreate ={setShowCreate} fetchUser ={refetch} history={history} />
         <UpdateAccount showUpdate ={showUpdate} setShowUpdate ={setShowUpdate} fetchUser ={refetch} user ={user} isInit ={isInit} history={history}/>
@@ -77,8 +82,8 @@ export const App = () => {
 
         <PrivateRoute user = {user}  fetchUser ={refetch} exact path="/your_maps" isInit ={isInit} component ={YourMaps} history={history}/>
 
-        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id" isInit ={isInit} component ={RegionSpreadSheet} history={history}/>
-        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id/:region_id" isInit ={isInit} component ={RegionSpreadSheet} history={history}/>
+        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths}/>
+        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id/:region_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths}/>
       </Switch>
       </Container>
   );

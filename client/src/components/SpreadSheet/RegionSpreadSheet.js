@@ -11,7 +11,7 @@ export const RegionSpreadSheet =(props)=>{
   let {map_id,region_id} = useParams();
   const [parent_id,setParentId] = useState(region_id === undefined ? map_id : region_id);
   const [isMap,setIsMap] = useState(region_id === undefined ? true : false);
-  console.log(parent_id);
+  //console.log(parent_id);
   const [mapInfo,setMapInfo] = useState({});
   const [subregions,setSubregions] = useState([]);
   const [input,setInput] = useState({
@@ -24,6 +24,34 @@ export const RegionSpreadSheet =(props)=>{
     parent_id: parent_id,
     isParentAMap: region_id === undefined ? true : false
   });
+  const [previousPaths,setPreviousPaths] = useState([]);
+
+    const {loading:previous_paths_loading, error:previous_paths_error, data:previous_paths_data,refetch:previous_paths_refetch} = useQuery(queries.GET_PREVIOUS_PATHS,{
+      variables: {
+        _id: parent_id
+      }
+    });
+
+    useEffect(async ()=>{
+      if(previous_paths_loading){
+        console.log(previous_paths_loading);
+      }
+
+      if(previous_paths_error){
+        console.log(`Error: ${previous_paths_error.message}`);
+      }
+
+      if(previous_paths_data){
+
+        let {getRegionPaths} = previous_paths_data;
+        if(getRegionPaths!== null){
+          setPreviousPaths(getRegionPaths);
+          console.log(getRegionPaths);
+          console.log(previousPaths);
+          props.handleSetPaths(getRegionPaths);
+        }
+      }
+    },[previous_paths_data,previousPaths]);
 
   const [isInit,setIsInit] = useState(false);
   const {loading:subregion_loading,error:subregion_error,data:subregion_data,refetch:subregion_refetch} = useQuery(queries.GET_SUBREGION_BY_ID ,{
@@ -54,7 +82,7 @@ export const RegionSpreadSheet =(props)=>{
     }else{
       setIsInit(false);
     }
-  },[subregion_data]);
+  },[subregion_data,subregions]);
 
   useEffect(() =>{
     if(current_map_loading) console.log(current_map_loading);

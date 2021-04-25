@@ -18,6 +18,14 @@ module.exports ={
       let map = await Region.findById({_id:obj_id});
       if(map) return map;
       return {};
+    },
+    getRegionPaths : async (_,args,{res}) =>{
+      let {_id} = args;
+      let map = await Map.findById({_id:new ObjectId(_id)});
+      if(map) return [];
+      let arr = [];
+      await previousPaths(_id,arr);
+      return arr;
     }
   },
   Mutation:{
@@ -93,6 +101,21 @@ const deleteChildrenFromArray = (_id,arr) =>{
     altered_arr.push(arr[x]);
   }
   return altered_arr;
+}
+
+const previousPaths = async (_id,arr) =>{
+  let region = await Region.findById({_id:_id});
+  
+  if(region.isParentAMap){
+    let map = await Map.findById({_id:region.parent_id});
+    arr.unshift({_id: region.parent_id,name:map.name});
+    return;
+  }
+  let parent_region = await Region.findById({_id:region.parent_id});
+  arr.unshift({_id:region.parent_id,name:parent_region.name});
+
+  return await previousPaths(region.parent_id,arr);
+  
 }
 
 
