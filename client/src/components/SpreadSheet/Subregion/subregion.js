@@ -4,8 +4,8 @@ import {Link} from 'react-router-dom';
 
 export const Subregion = (props) =>{
 
-  const handleDeleteSubregion =() =>{
-    alert(props._id)
+  const handleDeleteSubregion =async () =>{
+    await props.handleDeleteSubregion(props._id);
   }
 
   const handleNavigate = () =>{

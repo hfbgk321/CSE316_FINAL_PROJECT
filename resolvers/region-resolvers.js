@@ -52,9 +52,9 @@ module.exports ={
     },
 
     deleteSubregion: async (_,args,{res}) =>{
-      let {subregion_id} = args;
+      let {_id} = args;
 
-      let currentRegion = await Region.findById({_id: subregion_id});
+      let currentRegion = await Region.findById({_id: _id});
       if(currentRegion.isParentAMap){
         let map = await Map.findById({_id:currentRegion.parent_id});
         let new_children = deleteChildrenFromArray(currentRegion._id,map.children);
@@ -65,7 +65,7 @@ module.exports ={
         let updated_parent = await Region.findByIdAndUpdate({_id:currentRegion.parent_id},{children:new_children});
       }
       
-      let deleted = await deleteChildComponents(subregion_id);
+      let deleted = await deleteChildComponents(_id);
       if(deleted == "done"){
         return true;
       }

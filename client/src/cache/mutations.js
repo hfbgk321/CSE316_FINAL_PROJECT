@@ -87,4 +87,10 @@ export const DELETE_MAP = gql`
   }
 `;
 
+export const DELETE_SUBREGION = gql`
+  mutation DeleteSubregion($_id:String){
+    deleteSubregion(_id:$_id)
+  }
+`;
+
 

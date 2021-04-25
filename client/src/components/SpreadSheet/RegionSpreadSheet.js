@@ -3,7 +3,7 @@ import {Table,Container,Row,Col,Button} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import {useQuery,useMutation} from "@apollo/client";
 import * as queries from '../../cache/queries';
-import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP} from '../../cache/mutations';
+import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP,DELETE_SUBREGION} from '../../cache/mutations';
 import {Subregion} from './Subregion/subregion';
 import { set } from 'mongoose';
 
@@ -30,7 +30,7 @@ export const RegionSpreadSheet =(props)=>{
     variables:{parent_id:parent_id}
   });
 
-  const {loading:current_map_loading, error:current_map_error,data:current_map_data} = useQuery(isMap ? queries.GET_MAP_BY_ID : queries.GET_REGION_BY_ID,{
+  const {loading:current_map_loading, error:current_map_error,data:current_map_data,refetch:current_map_refetch} = useQuery(isMap ? queries.GET_MAP_BY_ID : queries.GET_REGION_BY_ID,{
     variables:{
       _id: parent_id
     }
@@ -39,6 +39,8 @@ export const RegionSpreadSheet =(props)=>{
 
   const [AddSubregion] = useMutation(ADD_NEW_REGION);
   const [AddSubregionToMap] = useMutation(ADD_NEW_REGION_TO_MAP);
+  const [DeleteSubregion] = useMutation(DELETE_SUBREGION);
+
 
   useEffect(()=>{
     if(subregion_loading) console.log(subregion_loading);
@@ -92,7 +94,22 @@ export const RegionSpreadSheet =(props)=>{
 
 		if (adding_region_data) {
 			await subregion_refetch();
+      await current_map_refetch();
 		};
+  }
+
+  const handleDeleteSubregion = async (_id) =>{
+    const {loading,errors,data} = await DeleteSubregion({variables:{_id:_id}});
+    if(loading) console.log(loading);
+    if(errors){
+      console.log(errors.message);
+      return `Error: ${errors.message}`;
+    }
+
+    if(data){
+      await subregion_refetch();
+      await current_map_refetch();
+    }
   }
 
 
@@ -119,7 +136,7 @@ export const RegionSpreadSheet =(props)=>{
           <tbody>
             {subregions.map((subregion,key)=>{
               return(
-                <Subregion _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history}/>
+                <Subregion _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} handleDeleteSubregion ={handleDeleteSubregion}/>
               )
             })}
             
