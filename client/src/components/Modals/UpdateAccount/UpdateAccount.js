@@ -86,12 +86,12 @@ export const UpdateAccount = (props) =>{
               </Form.Group>
 
               <Form.Group controlId="formBasicCurrentPassword">
-                <Form.Label>Password</Form.Label>
+                <Form.Label>Current Password</Form.Label>
                 <Form.Control type="password" placeholder="Enter your current password" name ="current_password" onBlur ={updateInput}/>
               </Form.Group>
 
               <Form.Group controlId="formBasicNewPassword">
-                <Form.Label>Password</Form.Label>
+                <Form.Label>New Password</Form.Label>
                 <Form.Control type="password" placeholder="Enter a new password" name ="new_password" onBlur ={updateInput}/>
               </Form.Group>
               {

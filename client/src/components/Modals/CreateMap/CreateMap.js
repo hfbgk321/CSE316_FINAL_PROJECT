@@ -57,7 +57,7 @@ export const CreateMap = (props) =>{
   return (
     <Modal centered show={props.showCreateMap} onHide={() =>props.setShowCreateMap(false)}>
         <Modal.Header closeButton>
-          <Modal.Title>Login</Modal.Title>
+          <Modal.Title>Create Map</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           {

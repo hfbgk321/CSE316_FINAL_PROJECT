@@ -1,8 +1,14 @@
 import react,{useState} from 'react';
 import {ListGroup,Button,Container,Row,Col} from 'react-bootstrap';
+import {DeleteMap} from '../../Modals/DeleteMap/DeleteMap';
 
 export const MapItem = (props) =>{
 
+  const [showDeleteMap,toggleShowDeleteMap] = useState(false);
+
+  const setShowDeleteMap =() =>{
+    toggleShowDeleteMap(!showDeleteMap);
+  }
   const handleClickName = () =>{
     window.location = `/your_maps/${props.map._id}`
   }
@@ -22,9 +28,10 @@ export const MapItem = (props) =>{
           </ListGroup.Item>
         </Col>
         <Col>
-          <Button variant="danger" onClick ={handleDelete}>Delete</Button>
+          <Button variant="danger" onClick ={setShowDeleteMap}>Delete</Button>
         </Col>
       </Row>
+      {setShowDeleteMap && <DeleteMap showDeleteMap ={showDeleteMap} setShowDeleteMap={setShowDeleteMap} handleDeleteMap ={handleDelete}/>}
     </Container>
   )
 }

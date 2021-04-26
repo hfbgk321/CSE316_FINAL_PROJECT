@@ -70,7 +70,9 @@ export const App = () => {
   }
 
 
-
+  if(!isInit){
+    return "";
+  }
   return (
       <Container fluid>
       <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} prevPaths = {prevPaths} setShowLogin ={setShowLogin} setShowUpdate ={setShowUpdate} fetchUser={refetch} user ={user} history={history} isInit ={isInit} tps ={transactionstack}/>
@@ -78,7 +80,7 @@ export const App = () => {
         <CreateAccountBootstrap showCreate ={showCreate} setShowCreate ={setShowCreate} fetchUser ={refetch} history={history} />
         <UpdateAccount showUpdate ={showUpdate} setShowUpdate ={setShowUpdate} fetchUser ={refetch} user ={user} isInit ={isInit} history={history}/>
       <Switch>
-      <Redirect exact from ="/" to={{pathname:"/welcome"}}/>
+      <Redirect exact from ="/" to={{pathname:user!==null ? "/your_maps" :"/welcome"}}/>
         <Route exact path="/welcome" component={WelcomeScreen} user ={user} fetchUser ={refetch} history={history}/>
 
         <PrivateRoute user = {user}  fetchUser ={refetch} exact path="/your_maps" isInit ={isInit} component ={YourMaps} history={history}/>
