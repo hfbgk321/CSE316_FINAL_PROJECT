@@ -5,6 +5,38 @@ export class jsTPS_Transaction {
 }
 
 
+export class EditItem_Transaction extends jsTPS_Transaction {
+	constructor(_id, field, new_value,old_value, callback) {
+		super();
+        this._id = _id;
+        this.field = field;
+        this.old_value = old_value;
+        this.new_value = new_value;
+        this.update_function = callback;
+		
+	}	
+
+	async doTransaction() {
+        const { data } = await this.update_function({variables:{
+            _id:this._id,
+            field:this.field,
+            value:this.new_value
+        }});
+        return data;
+    }
+
+    async undoTransaction() {
+		const {data} = await this.update_function({variables:{
+            _id:this._id,
+            field:this.field,
+            value:this.old_value
+        }});
+        return data;
+    }
+}
+
+
+
 export class jsTPS {
   constructor() {
       // THE TRANSACTION STACK

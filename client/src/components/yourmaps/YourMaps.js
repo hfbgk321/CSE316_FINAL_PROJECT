@@ -10,6 +10,8 @@ import {CreateMap} from '../Modals/CreateMap/CreateMap';
 
 import {MapItem} from '../yourmaps/MapItem/MapItem';
 
+import {EditItem_Transaction} from '../../utils/jsTPS';
+
 export const YourMaps =(props) =>{
   const [showCreateMap,toggleShowCreateMap] = useState(false);
   const [isInit,setIsInit] = useState(false);
@@ -18,6 +20,7 @@ export const YourMaps =(props) =>{
   const [DeleteMap] = useMutation(DELETE_MAP);
 
   useEffect(() =>{
+    // debugger;
     if(error) { console.log(error); }
     if(loading) { console.log(loading); }
     if(data){
@@ -29,7 +32,7 @@ export const YourMaps =(props) =>{
     }else{
       setIsInit(false);
     }
-  },[data]);
+  },[data,maps]);
 
   const setShowCreateMap =()=>{
     toggleShowCreateMap(!showCreateMap);
@@ -51,7 +54,8 @@ export const YourMaps =(props) =>{
     }
   }
 
-  
+
+
   return (
     <Container>
       <CreateMap showCreateMap ={showCreateMap} setShowCreateMap ={setShowCreateMap} fetchMaps ={refetch}/>
@@ -60,7 +64,7 @@ export const YourMaps =(props) =>{
         <ListGroup variant="flush" className ="map_list_group">
             {maps.map((map,key)=>{
               return (
-               <MapItem key ={key} map = {map} handleDeleteMap = {handleDeleteMap} fetchMaps ={refetch}/>
+               <MapItem key ={key} map = {map} handleDeleteMap = {handleDeleteMap} fetchMaps ={refetch} />
               )
             })}
         </ListGroup>

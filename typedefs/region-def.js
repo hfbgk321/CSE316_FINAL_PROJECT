@@ -22,7 +22,7 @@ const typeDefs = gql `
 	extend type Mutation {
     addSubregion(subregion: RegionInput): Region
     deleteSubregion(_id: String):Boolean
-    updateSubregionField(subregion_id: String!, field:String!, value:String!): String
+    updateSubregionField(_id: String, field:String, value:String): Region
     updateParentRegion(currentParentId:String!, newParentId: String!, _id:String!): String
 		addSubregionToMap(subregion:RegionInput): Region
 	},

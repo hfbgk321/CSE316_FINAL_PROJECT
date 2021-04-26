@@ -78,6 +78,12 @@ module.exports ={
         return true;
       }
       return false;
+    },
+
+    updateSubregionField: async (_,args,{res}) =>{
+      let {_id,field,value} = args;
+      let updated = await Region.findByIdAndUpdate({_id,_id},{[field]:value},{new:true});
+      return updated;
     }
   }
 }

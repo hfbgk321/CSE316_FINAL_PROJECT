@@ -33,7 +33,8 @@ export const LoginBootStrap = (props) =>{
 			// props.refetchTodos();
 			toggleLoading(false)
 			props.setShowLogin(false);
-			props.history.push("/your_maps");
+      window.location = "/your_maps";
+			// props.history.push("/your_maps");
 		};
 	};
 

@@ -41,8 +41,9 @@ const LoggedOut =(props) =>{
   
 }
 
-const handlePreviousLink = (key,_id,map_id) =>{
-  if(map_id ==_id){
+const handlePreviousLink = (props,key,_id,map_id) =>{
+  props.tps.clearAllTransactions();
+  if(_id === map_id){
     window.location =`/your_maps/${_id}`;
   }else{
     window.location =`/your_maps/${map_id}/${_id}`;
@@ -51,7 +52,6 @@ const handlePreviousLink = (key,_id,map_id) =>{
 
 
 export const NavbarComponent = (props) =>{
-  debugger;
   if(!props.isInit){
     return "";
   }
@@ -60,13 +60,19 @@ export const NavbarComponent = (props) =>{
 
     <Navbar expand="lg" variant="light" bg="light">
       <Container>
-        <Navbar.Brand >Navbar</Navbar.Brand>
+        <Navbar.Brand onClick ={() =>{
+          if(props.auth){
+            props.history.push("/your_maps");
+          }else{
+            props.history.push("/welcome");
+          }
+        }}>Navbar</Navbar.Brand>
         <Nav className ="ml-auto">
         {props.prevPaths.map((path,key)=>{
           return (
             <Nav.Item>
             <Nav.Link eventKey="link-1" onClick ={() =>
-            handlePreviousLink(key,path._id,props.prevPaths[props.prevPaths.length-1]._id)}>{path.name}</Nav.Link>
+            handlePreviousLink(props,key,path._id,props.prevPaths[0]._id)}>{path.name}</Nav.Link>
           </Nav.Item>
           )
            

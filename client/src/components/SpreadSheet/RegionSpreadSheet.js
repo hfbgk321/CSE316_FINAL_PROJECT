@@ -3,9 +3,10 @@ import {Table,Container,Row,Col,Button} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import {useQuery,useMutation} from "@apollo/client";
 import * as queries from '../../cache/queries';
-import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP,DELETE_SUBREGION} from '../../cache/mutations';
+import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP,DELETE_SUBREGION,UPDATE_SUBREGION_FIELD} from '../../cache/mutations';
 import {Subregion} from './Subregion/subregion';
 import { set } from 'mongoose';
+import {EditItem_Transaction} from '../../utils/jsTPS';
 
 export const RegionSpreadSheet =(props)=>{
   let {map_id,region_id} = useParams();
@@ -14,6 +15,8 @@ export const RegionSpreadSheet =(props)=>{
   //console.log(parent_id);
   const [mapInfo,setMapInfo] = useState({});
   const [subregions,setSubregions] = useState([]);
+  const [hasUndo,setHasUndo] = useState(false);
+  const [hasRedo,setHasRedo] = useState(false);
   const [input,setInput] = useState({
     	_id: "",
     name: "None",
@@ -140,13 +143,42 @@ export const RegionSpreadSheet =(props)=>{
     }
   }
 
+  const [UpdateSubregionField] = useMutation(UPDATE_SUBREGION_FIELD);
+
+  const tpsRedo =async () =>{
+    if(props.tps.hasTransactionToRedo()){
+      await props.tps.doTransaction();
+      await subregion_refetch();
+      await current_map_refetch();
+      setHasUndo(props.tps.hasTransactionToUndo());
+      setHasRedo(props.tps.hasTransactionToRedo());
+    }
+  }
+
+
+  const tpsUndo =async () =>{
+    if(props.tps.hasTransactionToUndo()){
+      await props.tps.undoTransaction();
+      await subregion_refetch();
+      await current_map_refetch();
+      setHasUndo(props.tps.hasTransactionToUndo());
+      setHasRedo(props.tps.hasTransactionToRedo());
+    }
+  }
+
+  const updateSubregion = async(_id, field,new_value,old_value)=>{
+    let transaction = new EditItem_Transaction(_id,field,new_value,old_value,UpdateSubregionField);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+  }
+
 
   return (
     <Container fluid className = "spreadsheet_container">
       <Row className ="button_row">
-          <Col sm ={1}><Button variant="primary" onClick ={handleAddNewRegion}>Add Region</Button>{' '}</Col>
-          <Col sm ={1}><Button variant="secondary">Undo</Button>{' '}</Col>
-          <Col sm ={1}><Button variant="secondary">Redo</Button>{' '}</Col>
+          <Col sm ={1}><Button variant="primary" onClick ={handleAddNewRegion} >Add Region</Button>{' '}</Col>
+          <Col sm ={1}><Button variant="secondary" onClick ={tpsUndo} disabled={hasUndo ? false: true}>Undo</Button>{' '}</Col>
+          <Col sm ={1}><Button variant="secondary" onClick ={tpsRedo} disabled={hasRedo ? false: true}>Redo</Button>{' '}</Col>
           <Col sm ={9}><h3>Region Name: {mapInfo.name}</h3></Col>
       </Row>
         <Row className="table_row">
@@ -164,7 +196,7 @@ export const RegionSpreadSheet =(props)=>{
           <tbody>
             {subregions.map((subregion,key)=>{
               return(
-                <Subregion _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} handleDeleteSubregion ={handleDeleteSubregion}/>
+                <Subregion _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} handleDeleteSubregion ={handleDeleteSubregion} updateSubregion ={updateSubregion} tps ={props.tps}/>
               )
             })}
             
