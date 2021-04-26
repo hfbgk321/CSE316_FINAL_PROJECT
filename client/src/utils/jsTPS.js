@@ -4,6 +4,99 @@ export class jsTPS_Transaction {
   undoTransaction () {};
 }
 
+export class UpdateRegionItems_Transaction extends jsTPS_Transaction{
+    //opcodes 0 - delete 1-add
+    constructor(pos,_id,region,opcode,addfunc,delfunc,isMap){
+        super();
+        this.pos = pos;
+        this._id = _id;
+        this.region = region;
+        this.opcode = opcode;
+        this.addfunc = addfunc;
+        this.delfunc = delfunc;
+        this.isMap = isMap;
+        this.saved_data =[];
+    }
+
+    async doTransaction(){
+        let {data} = this.opcode === 0 ? await this.delfunc({variables:{
+            _id:this._id
+        }}) : await this.addfunc({variables:{
+            pos:this.pos,
+            subregion: this.region,
+            arr: this.saved_data
+        }});
+
+        if(this.opcode === 1){
+            if(this.isMap){
+                this._id = data.addSubregionToMap._id;
+                // this.saved_data = data.addSubregionToMap;
+            }else{
+                this._id = data.addSubregion._id;
+                // this.saved_data = data.addSubregion;
+            }
+        }else{
+            let arr = [];
+            let temp = data.deleteSubregion;
+            for(let x  = 0; x<temp.length;x++){
+                let temp_region = {
+                    _id: temp[x]._id,
+		            children:temp[x].children,
+                    name:temp[x].name,
+                    capital:temp[x].capital,
+                    leader:temp[x].leader,
+                    flag:temp[x].flag,
+                    landmarks:temp[x].landmarks,
+                    parent_id:temp[x].parent_id,
+		            isParentAMap: temp[x].isParentAMap
+                }
+                arr.push(temp_region);
+            }
+            this.saved_data = arr;
+        }
+        return data;
+    }
+
+    async undoTransaction(){
+        let {data} = this.opcode === 1 ? await this.delfunc({variables:{
+            _id:this._id
+        }}) : await this.addfunc({variables:{
+            pos:this.pos,
+            subregion: this.region,
+            arr:this.saved_data
+        }});
+
+        if(this.opcode === 0){
+            if(this.isMap){
+                this._id = data.addSubregionToMap._id;
+                // this.saved_data = data.addSubregionToMap;
+            }else{
+                this._id = data.addSubregion._id;
+                // this.saved_data = data.addSubregion;
+            }
+        }else{
+            let arr = [];
+            let temp = data.deleteSubregion;
+            for(let x  = 0; x<temp.length;x++){
+                let temp_region = {
+                    _id: temp[x]._id,
+		            children:temp[x].children,
+                    name:temp[x].name,
+                    capital:temp[x].capital,
+                    leader:temp[x].leader,
+                    flag:temp[x].flag,
+                    landmarks:temp[x].landmarks,
+                    parent_id:temp[x].parent_id,
+		            isParentAMap: temp[x].isParentAMap
+                }
+                arr.push(temp_region);
+            }
+            this.saved_data = arr;
+        }
+        return data;
+    }
+}
+
 
 export class EditItem_Transaction extends jsTPS_Transaction {
 	constructor(_id, field, new_value,old_value, callback) {

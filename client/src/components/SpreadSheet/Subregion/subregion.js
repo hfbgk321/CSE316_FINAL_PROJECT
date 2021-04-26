@@ -47,9 +47,23 @@ export const Subregion = (props) =>{
     toggleEditFlag(false);
   }
 
-
+//pos,_id,region,opcode
   const handleDeleteSubregion =async () =>{
-    await props.handleDeleteSubregion(props._id);
+    console.log(props.isParentAMap);
+    console.log(props.pos);
+    let region = {
+      _id: props._id,
+      name: props.name,
+      capital: props.capital,
+      leader:props.leader,
+      flag: props.flag,
+      landmarks: props.landmarks,
+      parent_id: props.parent_id,
+      isParentAMap: props.isParentAMap,
+      children:props.children
+    }
+    await props.AddOrDeleteSubregion(props.pos,props._id,region,0);
+    toggleDeleteRegion(false);
   }
 
   const handleNavigate = () =>{

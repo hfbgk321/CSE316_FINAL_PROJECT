@@ -6,7 +6,7 @@ import * as queries from '../../cache/queries';
 import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP,DELETE_SUBREGION,UPDATE_SUBREGION_FIELD} from '../../cache/mutations';
 import {Subregion} from './Subregion/subregion';
 import { set } from 'mongoose';
-import {EditItem_Transaction} from '../../utils/jsTPS';
+import {EditItem_Transaction,UpdateRegionItems_Transaction} from '../../utils/jsTPS';
 
 export const RegionSpreadSheet =(props)=>{
   let {map_id,region_id} = useParams();
@@ -25,7 +25,8 @@ export const RegionSpreadSheet =(props)=>{
     flag: "None",
     landmarks: [],
     parent_id: parent_id,
-    isParentAMap: region_id === undefined ? true : false
+    isParentAMap: region_id === undefined ? true : false,
+    children:[]
   });
   const [previousPaths,setPreviousPaths] = useState([]);
 
@@ -171,12 +172,22 @@ export const RegionSpreadSheet =(props)=>{
     props.tps.addTransaction(transaction);
     await tpsRedo();
   }
+  //pos,_id,region,opcode,addfunc,delfunc
+
+
+  const AddOrDeleteSubregion = async (pos,_id,region,opcode) =>{
+    console.log(region);
+    console.log(isMap);
+    let transaction = new UpdateRegionItems_Transaction(pos,_id,region,opcode,isMap ? AddSubregionToMap : AddSubregion,DeleteSubregion,isMap);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+  }
 
 
   return (
     <Container fluid className = "spreadsheet_container">
       <Row className ="button_row">
-          <Col sm ={1}><Button variant="primary" onClick ={handleAddNewRegion} >Add Region</Button>{' '}</Col>
+          <Col sm ={1}><Button variant="primary" onClick ={() =>{AddOrDeleteSubregion(subregions.length,"",{...input},1)}} >Add Region</Button>{' '}</Col>
           <Col sm ={1}><Button variant="secondary" onClick ={tpsUndo} disabled={hasUndo ? false: true}>Undo</Button>{' '}</Col>
           <Col sm ={1}><Button variant="secondary" onClick ={tpsRedo} disabled={hasRedo ? false: true}>Redo</Button>{' '}</Col>
           <Col sm ={9}><h3>Region Name: {mapInfo.name}</h3></Col>
@@ -196,7 +207,7 @@ export const RegionSpreadSheet =(props)=>{
           <tbody>
             {subregions.map((subregion,key)=>{
               return(
-                <Subregion _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} handleDeleteSubregion ={handleDeleteSubregion} updateSubregion ={updateSubregion} tps ={props.tps}/>
+                <Subregion pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children}/>
               )
             })}
             

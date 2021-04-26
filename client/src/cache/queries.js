@@ -35,6 +35,7 @@ export const GET_SUBREGION_BY_ID = gql`
     	flag
     	landmarks
     	parent_id
+			isParentAMap
 		}
 	}
 `;
@@ -62,6 +63,7 @@ export const GET_REGION_BY_ID = gql`
     	flag
     	landmarks
     	parent_id
+			isParentAMap
 		}
 	}
 `;

@@ -52,8 +52,8 @@ export const CREATE_MAP = gql`
 `;
 
 export const ADD_NEW_REGION = gql`
-  mutation AddSubregion($subregion: RegionInput){
-    addSubregion(subregion: $subregion){
+  mutation AddSubregion($pos:Int,$subregion: RegionInput,$arr:[RegionInput]){
+    addSubregion(pos:$pos,subregion: $subregion,arr:$arr){
       _id
 		  children
       name
@@ -67,8 +67,8 @@ export const ADD_NEW_REGION = gql`
 `;
 
 export const ADD_NEW_REGION_TO_MAP = gql`
-  mutation AddSubregionToMap($subregion:RegionInput){
-    addSubregionToMap(subregion:$subregion){
+  mutation AddSubregionToMap($pos:Int,$subregion:RegionInput,$arr:[RegionInput]){
+    addSubregionToMap(pos:$pos,subregion:$subregion,arr:$arr){
       _id
 		  children
       name
@@ -89,7 +89,17 @@ export const DELETE_MAP = gql`
 
 export const DELETE_SUBREGION = gql`
   mutation DeleteSubregion($_id:String){
-    deleteSubregion(_id:$_id)
+    deleteSubregion(_id:$_id){
+      _id
+			children
+    	name
+    	capital
+    	leader
+    	flag
+    	landmarks
+    	parent_id
+			isParentAMap
+    }
   }
 `;
 
