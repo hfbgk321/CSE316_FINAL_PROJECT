@@ -3,10 +3,10 @@ import {Table,Container,Row,Col,Button} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import {useQuery,useMutation} from "@apollo/client";
 import * as queries from '../../cache/queries';
-import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP,DELETE_SUBREGION,UPDATE_SUBREGION_FIELD} from '../../cache/mutations';
+import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP,DELETE_SUBREGION,UPDATE_SUBREGION_FIELD,UPDATE_MAP_CHILDREN,UPDATE_REGION_CHILDREN} from '../../cache/mutations';
 import {Subregion} from './Subregion/subregion';
 import { set } from 'mongoose';
-import {EditItem_Transaction,UpdateRegionItems_Transaction} from '../../utils/jsTPS';
+import {EditItem_Transaction,UpdateRegionItems_Transaction,SortRegionItems_Transaction} from '../../utils/jsTPS';
 
 export const RegionSpreadSheet =(props)=>{
   let {map_id,region_id} = useParams();
@@ -72,6 +72,8 @@ export const RegionSpreadSheet =(props)=>{
   const [AddSubregion] = useMutation(ADD_NEW_REGION);
   const [AddSubregionToMap] = useMutation(ADD_NEW_REGION_TO_MAP);
   const [DeleteSubregion] = useMutation(DELETE_SUBREGION);
+  const [UpdateMapChildren] = useMutation(UPDATE_MAP_CHILDREN);
+  const [UpdateRegionChildren] = useMutation(UPDATE_REGION_CHILDREN);
 
 
   useEffect(()=>{
@@ -108,41 +110,6 @@ export const RegionSpreadSheet =(props)=>{
     }
   },[current_map_data]);
 
-
-  const handleAddNewRegion =async ()=>{
-    let return_info;
-    
-    if(isMap){
-      return_info = await AddSubregionToMap({variables:{subregion:{...input}}});
-    }else{
-      return_info = await AddSubregion({variables:{subregion:{...input}}});
-    }
-    const {loading:adding_region_loading,error:adding_region_error,data:adding_region_data} = return_info;
-
-    if (adding_region_error) { 
-			console.log(adding_region_error.message);
-			return `Error: ${adding_region_error.message}` 
-		};
-
-		if (adding_region_data) {
-			await subregion_refetch();
-      await current_map_refetch();
-		};
-  }
-
-  const handleDeleteSubregion = async (_id) =>{
-    const {loading,errors,data} = await DeleteSubregion({variables:{_id:_id}});
-    if(loading) console.log(loading);
-    if(errors){
-      console.log(errors.message);
-      return `Error: ${errors.message}`;
-    }
-
-    if(data){
-      await subregion_refetch();
-      await current_map_refetch();
-    }
-  }
 
   const [UpdateSubregionField] = useMutation(UPDATE_SUBREGION_FIELD);
 
@@ -183,6 +150,64 @@ export const RegionSpreadSheet =(props)=>{
     await tpsRedo();
   }
 
+  const registerSortItemsTransaction = async (sortingCriteria) =>{
+    debugger;
+    let oldRegionsIds = [];
+    let newRegionsToSort = [];
+
+    for(let x = 0; x< subregions.length;x++){
+      oldRegionsIds.push(subregions[x]._id);
+      newRegionsToSort.push(subregions[x]);
+    }
+
+    let sortIncreasing = true;
+    if(isIncreasingOrder(newRegionsToSort,sortingCriteria)){
+			sortIncreasing = false;
+		}
+
+    let compareFunction = makeCompareFunction(sortingCriteria,sortIncreasing);
+    newRegionsToSort = newRegionsToSort.sort(compareFunction);
+
+    let newRegionIds = [];
+    for(let x = 0; x< newRegionsToSort.length;x++){
+			newRegionIds.push(newRegionsToSort[x]._id);
+		}
+
+    console.log(isMap);
+    let transaction = new SortRegionItems_Transaction(parent_id,oldRegionsIds,newRegionIds,isMap ? UpdateMapChildren:UpdateRegionChildren);
+    props.tps.addTransaction(transaction);
+    await tpsRedo();
+  }
+
+  const isIncreasingOrder = (newItemsToSort,sortingCriteria) =>{
+    for(let x = 0; x< newItemsToSort.length-1;x++){
+      if(newItemsToSort[x][sortingCriteria] > newItemsToSort[x+1][sortingCriteria]){
+        return false;
+      }
+    }
+    return true;
+  }
+
+  const makeCompareFunction = (sortingCriteria,sortIncreasing) => {
+		return function (item1, item2) {
+      let negate = -1;
+      if (sortIncreasing) {
+        negate = 1;
+      }
+      let value1 = item1[sortingCriteria];
+      let value2 = item2[sortingCriteria];
+      if (value1 < value2) {
+        return -1 * negate;
+      }
+      else if (value1 === value2) {
+        return 0;
+      }
+      else {
+        return 1 * negate;
+      }
+    }
+	}
+
 
   return (
     <Container fluid className = "spreadsheet_container">
@@ -197,10 +222,10 @@ export const RegionSpreadSheet =(props)=>{
           <thead>
             <tr>
               <th>#</th>
-              <th>Name</th>
-              <th>Capital</th>
-              <th>Leader</th>
-              <th>Flag</th>
+              <th onClick ={async () => await registerSortItemsTransaction("name")}>Name</th>
+              <th onClick = {async () => await registerSortItemsTransaction("capital")}>Capital</th>
+              <th onClick = {async () => await registerSortItemsTransaction("leader")}>Leader</th>
+              <th onClick = {async () => await registerSortItemsTransaction("flag")}>Flag</th>
               <th>Landmarks</th>
             </tr>
           </thead>

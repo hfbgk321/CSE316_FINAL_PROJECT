@@ -5,7 +5,7 @@ import globe from '../../images/globe.jpg';
 import "./YourMaps.css";
 import * as queries from '../../cache/queries';
 import {useQuery,useMutation} from '@apollo/client';
-import {DELETE_MAP} from '../../cache/mutations';
+import {DELETE_MAP,UPDATE_MAP_NAME} from '../../cache/mutations';
 import {CreateMap} from '../Modals/CreateMap/CreateMap';
 
 import {MapItem} from '../yourmaps/MapItem/MapItem';
@@ -18,6 +18,7 @@ export const YourMaps =(props) =>{
   const [maps,setMaps] = useState([]);
   const {loading, error, data, refetch} = useQuery(queries.GET_ALL_MAPS);
   const [DeleteMap] = useMutation(DELETE_MAP);
+  const [UpdateMapName] = useMutation(UPDATE_MAP_NAME);
 
   useEffect(() =>{
     // debugger;
@@ -54,6 +55,26 @@ export const YourMaps =(props) =>{
     }
   }
 
+  const handleChangeMapName = async (_id, name) => {
+    let {loading, errors,data} = await UpdateMapName({variables:{
+      _id:_id,
+      name:name
+    }});
+
+    if(loading) console.log(loading);
+    if(errors){
+      console.log(errors.message);
+      return;
+    }
+
+    if(data){
+      let {updateMapName} = data;
+      if(updateMapName){
+        await refetch();
+      }
+    }
+  }
+
 
 
   return (
@@ -64,7 +85,7 @@ export const YourMaps =(props) =>{
         <ListGroup variant="flush" className ="map_list_group">
             {maps.map((map,key)=>{
               return (
-               <MapItem key ={key} map = {map} handleDeleteMap = {handleDeleteMap} fetchMaps ={refetch} />
+               <MapItem key ={key} map = {map} handleDeleteMap = {handleDeleteMap} fetchMaps ={refetch} handleChangeMapName ={handleChangeMapName} _id ={map._id}/>
               )
             })}
         </ListGroup>

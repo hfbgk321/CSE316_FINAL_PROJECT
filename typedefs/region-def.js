@@ -17,7 +17,6 @@ const typeDefs = gql `
     getRegionsByParentId(parent_id:String!): [Region]
     getAllRegions:[Region!]
 		getRegionPaths(_id:String):[PathInfo]
-
 	}
 	extend type Mutation {
     addSubregion(pos:Int,subregion: RegionInput,arr:[RegionInput]): Region
@@ -25,6 +24,7 @@ const typeDefs = gql `
     updateSubregionField(_id: String, field:String, value:String): Region
     updateParentRegion(currentParentId:String!, newParentId: String!, _id:String!): String
 		addSubregionToMap(pos:Int,subregion:RegionInput,arr:[RegionInput]): Region
+		updateRegionChildren(_id:String, children: [String]): Region
 	},
   input RegionInput {
 	_id: String

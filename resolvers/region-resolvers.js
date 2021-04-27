@@ -167,6 +167,13 @@ module.exports ={
       let {_id,field,value} = args;
       let updated = await Region.findByIdAndUpdate({_id,_id},{[field]:value},{new:true});
       return updated;
+    },
+
+    updateRegionChildren: async (_,args,{res}) =>{
+      let {_id, children} = args;
+
+      let updated = await Region.findByIdAndUpdate({_id:_id},{children:[...children]},{new:true});
+      return updated;
     }
   }
 }

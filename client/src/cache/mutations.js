@@ -118,4 +118,44 @@ export const UPDATE_SUBREGION_FIELD = gql`
   }
 `;
 
+export const UPDATE_MAP_NAME = gql`
+  mutation UpdateMapName($_id:String!, $name: String!){
+    updateMapName(_id:$_id,name:$name){
+      _id
+	    children
+	    name
+	    ownerId
+    }
+  }
+`;
+
+
+export const UPDATE_MAP_CHILDREN = gql`
+  mutation UpdateMapChildren($_id:String, $children: [String]){
+    updateMapChildren(_id:$_id,children:$children){
+      _id
+	    children
+	    name
+	    ownerId
+    }
+  }
+`;
+
+
+export const UPDATE_REGION_CHILDREN = gql`
+  mutation UpdateRegionChildren($_id:String,$children:[String]){
+    updateRegionChildren(_id:$_id,children:$children){
+      _id
+		  children
+      name
+      capital
+      leader
+      flag
+      landmarks
+      parent_id
+    }
+  }
+
+`;
+
 

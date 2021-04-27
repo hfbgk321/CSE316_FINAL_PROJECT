@@ -4,6 +4,39 @@ export class jsTPS_Transaction {
   undoTransaction () {};
 }
 
+
+export class SortRegionItems_Transaction extends jsTPS_Transaction{
+    constructor(_id,oldRegionOrder,newRegionOrder,callback){
+        super();
+        this._id = _id;
+        this.oldRegionOrder = oldRegionOrder;
+        this.newRegionOrder = newRegionOrder;
+        this.updateFunction = callback;
+    }
+
+    async doTransaction(){
+        const {data} = await this.updateFunction({
+            variables:{
+                _id:this._id,
+                children:this.newRegionOrder
+            }
+        });
+
+        return data;
+    }
+
+    async undoTransaction(){
+        const {data} = await this.updateFunction({
+            variables:{
+                _id:this._id,
+                children:this.oldRegionOrder
+            }
+        })
+        return data;
+    }
+}
+
+
 export class UpdateRegionItems_Transaction extends jsTPS_Transaction{
     //opcodes 0 - delete 1-add
     constructor(pos,_id,region,opcode,addfunc,delfunc,isMap){

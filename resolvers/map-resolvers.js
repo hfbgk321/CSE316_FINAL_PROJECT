@@ -46,6 +46,17 @@ module.exports ={
         await deleteChildComponents(children[x]);
       }
       return true;
+    },
+    updateMapName: async (_,args,{req}) =>{
+      let {_id,name} = args;
+      let map = await Map.findByIdAndUpdate({_id:_id},{name:name},{new:true});
+      if(map) return map;
+      return {};
+    },
+    updateMapChildren: async (_,args,{req}) =>{
+      let {_id, children} = args;
+      let map = await Map.findByIdAndUpdate({_id:_id},{children:[...children]},{new:true});
+      return map;
     }
   }
 }
