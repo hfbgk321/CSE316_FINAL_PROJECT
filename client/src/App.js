@@ -18,6 +18,8 @@ import {RegionSpreadSheet} from './components/SpreadSheet/RegionSpreadSheet';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {Container,Row ,Col} from 'react-bootstrap';
 
+import {RegionViewerMain} from './components/RegionViewer/RegionViewerMain';
+
 export const App = () => {
   let history = useHistory();
   const[showCreate,toggleShowCreate] = useState(false);
@@ -87,6 +89,11 @@ export const App = () => {
 
         <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {transactionstack}/>
         <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id/:region_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {transactionstack}/>
+
+        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:map_id/:region_id/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} />
+
+        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:map_id/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} />
+
       </Switch>
       </Container>
   );

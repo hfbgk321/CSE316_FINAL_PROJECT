@@ -174,6 +174,36 @@ module.exports ={
 
       let updated = await Region.findByIdAndUpdate({_id:_id},{children:[...children]},{new:true});
       return updated;
+    },
+
+    addLandmarkToRegion : async (_,args,{res}) =>{
+      let {_id,landmark} = args;
+      let region = await Region.findById({_id:_id});
+      let region_landmarks = region.landmarks;
+
+      let updated = await Region.findByIdAndUpdate({_id:_id},{landmarks:[...region_landmarks,landmark]},{new:true});
+      if(updated){
+        return updated;
+      }
+      return {};
+    },
+
+    changeLandmarkAtPos: async (_,args,{res}) =>{
+      let {_id,new_landmark,pos} = args;
+
+      let region = await Region.findById({_id:_id});
+      let region_landmarks = region.landmarks;
+
+      region_landmarks[pos] = new_landmark;
+
+      let updated = await Region.findByIdAndUpdate({_id:_id},{landmarks:[...region_landmarks]},{new:true});
+      if(updated){
+        return updated;
+      }
+      return {};
+
+      
+
     }
   }
 }

@@ -1,7 +1,7 @@
 import react,{useState,useEffect} from 'react';
 import { useDebugValue } from 'react';
 import {Button,Row,Col,Form} from 'react-bootstrap';
-import {Link} from 'react-router-dom';
+import {Link,useParams} from 'react-router-dom';
 import {DeleteRegion} from '../../Modals/DeleteRegion/DeleteRegion';
 export const Subregion = (props) =>{
 
@@ -66,8 +66,7 @@ export const Subregion = (props) =>{
     toggleDeleteRegion(false);
   }
 
-  const handleNavigate = () =>{
-    props.tps.clearAllTransactions();
+  const manipulateUrl = () =>{
     let current_path = props.history.location.pathname+"";
     //props.history.push(`${current_path}/${props._id}`);
     let path = current_path.split("/");
@@ -85,11 +84,19 @@ export const Subregion = (props) =>{
       }else{
         new_path+=(path[x]+"/");
       }
-      
     }
-    window.location = new_path;
+    return new_path;
+  }
+  const handleNavigate = () =>{
+    props.tps.clearAllTransactions();
+    let path = manipulateUrl();
+    window.location = path;
   }
 
+  const handleClickLandmarks =() =>{
+    let path = manipulateUrl();
+    window.location = `${path}/viewer`;
+  }
 
 
   return (
@@ -147,7 +154,7 @@ export const Subregion = (props) =>{
         )
       }
 
-      <td>{props.landmarks[0]+","+props.landmarks[1]+" ....."}</td>
+      <td onClick ={handleClickLandmarks}>{props.landmarks[0]+","+props.landmarks[1]+" ....."}</td>
   </tr>
   {showDeleteRegion && <DeleteRegion setShowDeleteRegion ={setShowDeleteRegion} showDeleteRegion ={showDeleteRegion} handleDeleteSubregion ={handleDeleteSubregion} />}
   </>

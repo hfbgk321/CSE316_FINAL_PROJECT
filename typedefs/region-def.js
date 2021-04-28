@@ -25,6 +25,8 @@ const typeDefs = gql `
     updateParentRegion(currentParentId:String!, newParentId: String!, _id:String!): String
 		addSubregionToMap(pos:Int,subregion:RegionInput,arr:[RegionInput]): Region
 		updateRegionChildren(_id:String, children: [String]): Region
+		addLandmarkToRegion(_id:String, landmark:String): Region
+		changeLandmarkAtPos(_id:String,new_landmark:String,pos:Int): Region
 	},
   input RegionInput {
 	_id: String

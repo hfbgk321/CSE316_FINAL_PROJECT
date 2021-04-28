@@ -155,6 +155,36 @@ export const UPDATE_REGION_CHILDREN = gql`
       parent_id
     }
   }
+`;
+
+export const ADD_LANDMARK_TO_REGION = gql`
+  mutation AddLandmarkToRegion($_id:String,$landmark:String){
+    addLandmarkToRegion(_id:$_id,landmark:$landmark){
+      _id
+		  children
+      name
+      capital
+      leader
+      flag
+      landmarks
+      parent_id
+    }
+  }
+`;
+
+export const CHANGE_LANDMARK_AT_POS = gql`
+  mutation ChangeLandmarkAtPos($_id:String,$new_landmark:String,$pos:Int){
+    changeLandmarkAtPos(_id:$_id,new_landmark:$new_landmark,pos:$pos){
+      _id
+		  children
+      name
+      capital
+      leader
+      flag
+      landmarks
+      parent_id
+    }
+  }
 
 `;
 
