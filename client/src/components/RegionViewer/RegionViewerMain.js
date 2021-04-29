@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 import {RegionalInfo} from './RegionalInfo/RegionalInfo';
 import {RegionalLandmarks} from './RegionalLandmarks/RegionalLandmarks';
 import {useQuery,useMutation} from '@apollo/client';
-import {GET_REGION_BY_ID,GET_SUBREGION_BY_ID,GET_MAP_BY_ID} from '../../cache/queries';
+import {GET_REGION_BY_ID,GET_SUBREGION_BY_ID,GET_MAP_BY_ID,GET_PREVIOUS_PATHS} from '../../cache/queries';
 
 
 
@@ -92,6 +92,29 @@ export const RegionViewerMain = (props) => {
       }
     }
   },[parentRegion_data,parentRegion]);
+
+
+  const {loading:previous_paths_loading,error:previous_paths_error,data:previous_paths_data,refetch:previous_paths_refetch} = useQuery(GET_PREVIOUS_PATHS,{variables:{
+    _id: region_id
+  }})
+
+  useEffect(()=>{
+    if(previous_paths_loading){
+      console.log(previous_paths_loading);
+    }
+
+    if(previous_paths_error){
+      console.log(previous_paths_error.message);
+      return previous_paths_error.message;
+    }
+
+    if(previous_paths_data){
+      let {getRegionPaths} = previous_paths_data;
+      if(getRegionPaths!==null){
+        props.handleSetPaths(getRegionPaths);
+      }
+    }
+  },[previous_paths_data])
   
 
 

@@ -90,9 +90,9 @@ export const App = () => {
         <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {transactionstack}/>
         <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id/:region_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {transactionstack}/>
 
-        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:map_id/:region_id/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} />
+        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:map_id/:region_id/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} handleSetPaths ={handleSetPaths}/>
 
-        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:map_id/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} />
+        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:map_id/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} handleSetPaths ={handleSetPaths}/>
 
       </Switch>
       </Container>
