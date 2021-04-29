@@ -62,12 +62,6 @@ module.exports = {
 				password: hashed
 			})
 			const saved = await user.save();
-			// After registering the user, their tokens are generated here so they
-			// are automatically logged in on account creation.
-			// const accessToken = tokens.generateAccessToken(user);
-			// const refreshToken = tokens.generateRefreshToken(user);
-			// res.cookie('refresh-token', refreshToken, { httpOnly: true , sameSite: 'None', secure: true}); 
-			// res.cookie('access-token', accessToken, { httpOnly: true , sameSite: 'None', secure: true}); 
 			return user;
 		},
 		/** 
@@ -82,8 +76,14 @@ module.exports = {
 
 		update: async (_,args,{req}) =>{
 				const {email,name,current_password,new_password} = args;
+				console.log(name);
 				const _id = new ObjectId(req.userId);
-				const alreadyExists = await User.findOne({email:email});
+				let currentUser = await User.findById({_id:_id});
+				let alreadyExists = false;
+				if(currentUser.email !== email){
+						let emailMatch = await User.findOne({email:email});
+						alreadyExists = emailMatch? true: false;
+				}
 
 				if(alreadyExists){
 					console.log('User with that email already registered.');
@@ -94,8 +94,8 @@ module.exports = {
 						password: ''}));
 				}
 
-				const user = await User.findOne({_id:_id});
-				const valid = await bcrypt.compare(current_password, user.password);
+				
+				const valid = await bcrypt.compare(current_password, currentUser.password);
 				if(!valid){
 					return(new User({
 						_id: 'invalid password',
@@ -105,7 +105,7 @@ module.exports = {
 				}
 
 				const hashed_password = await bcrypt.hash(new_password,10);
-				let updated_user = await User.findByIdAndUpdate(_id,{email:email,password:hashed_password});
+				let updated_user = await User.findByIdAndUpdate(_id,{email:email,password:hashed_password,name:name});
 				if(updated_user){
 					return updated_user;
 				}

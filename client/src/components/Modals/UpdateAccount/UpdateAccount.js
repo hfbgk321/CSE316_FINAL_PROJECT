@@ -6,7 +6,9 @@ import {UPDATE} from '../../../cache/mutations';
 
 export const UpdateAccount = (props) =>{
 
-  const [input, setInput] = useState({ email: '',current_password:'', new_password: ''});
+  const [input, setInput] = useState({ email: props.user.email === null ? "": props.user.email,current_password:"", new_password: '', name:props.user.name === null ? "" : props.user.name});
+  const [name,setName] = useState(props.user === null ? "": props.user.name);
+  const [email,setEmail] = useState(props.user === null ? "": props.user.email);
 	const [loading, toggleLoading] = useState(false);
   const [showErr, displayErrorMsg] = useState(false);
 	const [error,setError] = useState("");
@@ -27,6 +29,8 @@ export const UpdateAccount = (props) =>{
 				return;
 			}
 		}
+    debugger;
+
 		const { loading, error, data } = await Update({ variables: { ...input } });
 		if (loading) { toggleLoading(true) };
 		if (error) { 
@@ -74,12 +78,14 @@ export const UpdateAccount = (props) =>{
             : <Form>
               <Form.Group controlId="formBasicName">
                 <Form.Label>Name</Form.Label>
-                <Form.Control type="text" placeholder={props.user === null ? "": props.user.name } name ="name" readOnly/>
+                <Form.Control type="text" placeholder={props.user === null ? "": props.user.name } 
+                value = {name} onChange = {(e) => setName(e.target.value)} name ="name" onBlur ={updateInput}/>
               </Form.Group>
 
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
-                <Form.Control type="email" placeholder={props.user === null ? "" : props.user.email} name ="email" onBlur ={updateInput}/>
+                <Form.Control type="email" placeholder={props.user === null ? "" : props.user.email} 
+                value ={email} onChange ={(e) => setEmail(e.target.value)} name ="email" onBlur ={updateInput}/>
                 <Form.Text className="text-muted">
                   We'll never share your email with anyone else.
                 </Form.Text>
@@ -87,7 +93,7 @@ export const UpdateAccount = (props) =>{
 
               <Form.Group controlId="formBasicCurrentPassword">
                 <Form.Label>Current Password</Form.Label>
-                <Form.Control type="password" placeholder="Enter your current password" name ="current_password" onBlur ={updateInput}/>
+                <Form.Control type="password" placeholder="*******s" name ="current_password" onBlur ={updateInput}/>
               </Form.Group>
 
               <Form.Group controlId="formBasicNewPassword">
