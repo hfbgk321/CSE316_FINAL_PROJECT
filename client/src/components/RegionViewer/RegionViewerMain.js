@@ -14,6 +14,7 @@ export const RegionViewerMain = (props) => {
   const [sibling,setSiblings] = useState([]);
   const [isInit,setIsInit] = useState(false);
   const [isMap,setIsMap] = useState(false);
+  const [parentId,setParentId] = useState("");
   const [parentRegion,setParentRegion] = useState({});
 
   const {loading:region_loading,error:region_error,data:region_data,refetch:region_refetch} = useQuery(GET_REGION_BY_ID,{variables:{_id:region_id}});
@@ -33,6 +34,7 @@ export const RegionViewerMain = (props) => {
         setRegion(getRegionById);
         if(getRegionById.isParentAMap){
           setIsMap(true);
+          setParentId(getRegionById.parent_id);
         }
       }
       setIsInit(true);
@@ -106,7 +108,7 @@ export const RegionViewerMain = (props) => {
       
       <Row>
         <Col>
-          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id = {map_id} parentRegion ={parentRegion}/>
+          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id = {map_id} parentRegion ={parentRegion} isMap ={isMap}/>
         </Col>
         <Col>
           <RegionalLandmarks region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id = {map_id}/>

@@ -222,11 +222,15 @@ export const RegionSpreadSheet =(props)=>{
           <thead>
             <tr>
               <th>#</th>
-              <th onClick ={async () => await registerSortItemsTransaction("name")}>Name</th>
-              <th onClick = {async () => await registerSortItemsTransaction("capital")}>Capital</th>
-              <th onClick = {async () => await registerSortItemsTransaction("leader")}>Leader</th>
-              <th onClick = {async () => await registerSortItemsTransaction("flag")}>Flag</th>
-              <th>Landmarks</th>
+              <th onClick ={async () => await registerSortItemsTransaction("name")} 
+              style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Name</th>
+              <th onClick = {async () => await registerSortItemsTransaction("capital")} 
+              style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Capital</th>
+              <th onClick = {async () => await registerSortItemsTransaction("leader")}
+              style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Leader</th>
+              <th onClick = {async () => await registerSortItemsTransaction("flag")}
+              style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Flag</th>
+              <th style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Landmarks</th>
             </tr>
           </thead>
           <tbody>

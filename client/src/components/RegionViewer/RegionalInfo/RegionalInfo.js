@@ -19,8 +19,18 @@ export const RegionalInfo = (props) =>{
         </Col>
       </Row>
       <Row>
-        <Col>
-          <h3>Parent Region: {props.parentRegion.name}</h3>
+        <Col sm ={5}>
+          <h3>Parent Region:</h3>
+         
+        </Col>
+        <Col sm ={1} >
+        <h3 style = {{color:"green"}} onClick ={()=>{
+            if(props.isMap){
+              window.location = `/your_maps/${props.map_id}`;
+            }else{
+              window.location = `/your_maps/${props.map_id}/${props.parentRegion._id}`;
+            }
+          }}>{props.parentRegion.name}</h3>
         </Col>
       </Row>
     

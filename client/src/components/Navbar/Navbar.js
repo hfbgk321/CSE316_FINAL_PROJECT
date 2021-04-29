@@ -60,23 +60,27 @@ export const NavbarComponent = (props) =>{
 
     <Navbar expand="lg" variant="light" bg="light">
       <Container>
-        <Navbar.Brand onClick ={() =>{
+        <Navbar.Brand href ="/" onClick ={() =>{
           if(props.auth){
             props.history.push("/your_maps");
           }else{
             props.history.push("/welcome");
           }
-        }}>Navbar</Navbar.Brand>
-        <Nav className ="ml-auto">
+        }}>The World Data Mapper</Navbar.Brand>
+        <Nav>
         {props.prevPaths.map((path,key)=>{
           return (
             <Nav.Item>
             <Nav.Link eventKey="link-1" onClick ={() =>
-            handlePreviousLink(props,key,path._id,props.prevPaths[0]._id)}>{path.name}</Nav.Link>
+            handlePreviousLink(props,key,path._id,props.prevPaths[0]._id)}>{key === props.prevPaths.length -1 ? path.name: path.name+"  >"} </Nav.Link>
           </Nav.Item>
           )
            
         })}
+
+        </Nav>
+        <Nav className ="ml-auto">
+        
         {props.auth === false ? <LoggedOut history = {props.history} setShowCreate ={props.setShowCreate} setShowLogin ={props.setShowLogin}/>:<LoggedIn name ={props.user.name} history ={props.history} fetchUser ={props.fetchUser} setShowUpdate ={props.setShowUpdate}/>}
         
         </Nav>

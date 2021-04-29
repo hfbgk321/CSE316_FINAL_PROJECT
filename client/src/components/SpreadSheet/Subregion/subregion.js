@@ -11,6 +11,25 @@ export const Subregion = (props) =>{
   const [editFlag,toggleEditFlag] = useState(false);
   const [showDeleteRegion,toggleDeleteRegion] = useState(false);
 
+  let click = false;
+  let timer = 0;
+
+  const handleClick = () =>{
+    timer = setTimeout(()=>{
+      if(!click){
+        toggleEditName(!editName);
+      }
+      click = false;
+    },200);
+  }
+
+  const handleDoubleClick = () =>{
+    clearTimeout(timer);
+    click = true;
+    handleNavigate();
+    
+  }
+
   const setShowDeleteRegion = () =>{
     toggleDeleteRegion(!showDeleteRegion);
   }
@@ -111,7 +130,7 @@ export const Subregion = (props) =>{
         
       </td>
       {
-        !editName ? <td onClick = {() =>{toggleEditName(!editName)}}>{props.name}</td> : (
+        !editName ? <td onClick ={handleClick} onDoubleClick = {handleDoubleClick} >{props.name}</td> : (
           <td>
             <Form>
             <Form.Control type="text" placeholder="Enter your new name" onBlur ={handleEditName} autoFocus={true} name = "name"/>
