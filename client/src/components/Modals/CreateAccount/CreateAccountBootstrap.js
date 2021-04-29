@@ -41,11 +41,11 @@ export const CreateAccountBootstrap = (props) =>{
         displayErrorMsg(true);
         return;
 			}
-			else {
-				await props.fetchUser();
-        props.history.push("/your_maps");
-			}
-			props.setShowCreate(false);
+			// else {
+			// 	await props.fetchUser();
+      //   props.history.push("/your_maps");
+			// }
+			props.setShowLogin();
 
 		};
 	};

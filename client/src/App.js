@@ -79,7 +79,7 @@ export const App = () => {
       <Container fluid>
       <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} prevPaths = {prevPaths} setShowLogin ={setShowLogin} setShowUpdate ={setShowUpdate} fetchUser={refetch} user ={user} history={history} isInit ={isInit} tps ={transactionstack}/>
         <LoginBootStrap showLogin ={showLogin} setShowLogin ={setShowLogin} fetchUser ={refetch} history={history}/>
-        <CreateAccountBootstrap showCreate ={showCreate} setShowCreate ={setShowCreate} fetchUser ={refetch} history={history} />
+        <CreateAccountBootstrap showCreate ={showCreate} setShowCreate ={setShowCreate} fetchUser ={refetch} history={history} setShowLogin={setShowLogin}/>
         <UpdateAccount showUpdate ={showUpdate} setShowUpdate ={setShowUpdate} fetchUser ={refetch} user ={user} isInit ={isInit} history={history}/>
       <Switch>
       <Redirect exact from ="/" to={{pathname:user!==null ? "/your_maps" :"/welcome"}}/>

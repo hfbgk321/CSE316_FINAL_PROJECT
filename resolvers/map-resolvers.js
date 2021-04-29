@@ -10,13 +10,20 @@ module.exports ={
       const _id = new ObjectId(req.userId);
       if(!_id) return ([]);
       const maps = await Map.find({ownerId: _id});
+      maps.sort((a,b) => a.access_id - b.access_id);
       if(maps) return (maps); 
     },
     getMapById: async (_,args,{res}) =>{
       let {_id} = args;
       let obj_id = new ObjectId(_id);
-      let map = await Map.findById({_id:obj_id});
-      if(map) return map;
+      let current_map = await Map.findById({_id:obj_id});
+      if(current_map){
+        let current_map_access_id = current_map.access_id;
+        let most_recently_accessed_map = await Map.findOneAndUpdate({access_id:0},{access_id:current_map_access_id},{new:true});
+        current_map.access_id = 0;
+        await current_map.save();
+        return current_map;
+      }
       return {};
     }
   },
@@ -28,10 +35,20 @@ module.exports ={
       let _id = new ObjectId();
       map.ownerId = ownerId;
       map._id = _id;
+
+      let all_maps = await Map.find({ownerId:ownerId});
+      all_maps.sort((a,b) => a.access_id - b.access_id);
+      
+      if(all_maps.length === 0){
+        map.access_id = 0;
+      }else{
+        map.access_id = all_maps[all_maps.length-1].access_id+1;
+      }
+      
+
       let new_map = new Map(map);
 
       const saved = await new_map.save();
-      console.log(saved);
       return saved;
     },
     deleteMap: async (_,args,{req}) =>{

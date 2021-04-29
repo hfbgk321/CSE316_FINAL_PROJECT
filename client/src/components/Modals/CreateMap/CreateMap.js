@@ -35,7 +35,8 @@ export const CreateMap = (props) =>{
       _id:"",
       children:[],
       name:name,
-      ownerId:""
+      ownerId:"",
+      access_id:0
     };
 
 		const { loading, error, data } = await AddNewMap({ variables: {map:map} });

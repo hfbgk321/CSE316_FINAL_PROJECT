@@ -17,8 +17,11 @@ const mapSchema = new Schema(
     ownerId:{
       type:String,
       required:true
+    },
+    access_id:{
+      type:Number,
+      required:true
     }
-		
 	},
 	{ timestamps: true }
 );

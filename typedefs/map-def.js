@@ -6,6 +6,7 @@ const typeDefs = gql `
 		children: [String]
     name:String
     ownerId:String
+		access_id:Int
 	}
 	extend type Query {
 		getAllMaps : [Map]
@@ -24,6 +25,7 @@ const typeDefs = gql `
 	children: [String]
 	name: String
 	ownerId : String
+	access_id:Int
 }
 
 `;
