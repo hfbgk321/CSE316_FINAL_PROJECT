@@ -41,6 +41,7 @@ export const MapItem = (props) =>{
   const handleDelete = async () =>{
     await props.handleDeleteMap(props.map._id);
     await props.fetchMaps();
+    setShowDeleteMap();
   }
 
 

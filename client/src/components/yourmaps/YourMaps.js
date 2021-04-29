@@ -51,6 +51,7 @@ export const YourMaps =(props) =>{
       let {deleteMap} = data;
       if(deleteMap){
         await refetch();
+        
       }
     }
   }
@@ -79,7 +80,7 @@ export const YourMaps =(props) =>{
 
   return (
     <Container>
-      <CreateMap showCreateMap ={showCreateMap} setShowCreateMap ={setShowCreateMap} fetchMaps ={refetch}/>
+      <CreateMap showCreateMap ={showCreateMap} setShowCreateMap ={setShowCreateMap} fetchMaps ={refetch} history ={props.history}/>
       <Row className ="justify-content-center d-flex align-items-center your_maps_container">
         <Col>
         <ListGroup variant="flush" className ="map_list_group">

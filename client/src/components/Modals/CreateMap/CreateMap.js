@@ -48,9 +48,15 @@ export const CreateMap = (props) =>{
 		};
 
 		if (data) {
-			await props.fetchMaps();
-			toggleLoading(false)
-			props.setShowCreateMap(false);
+      let {addNewMap} = data;
+      if(addNewMap!==null){
+        window.location = `/your_maps/${addNewMap._id}`;
+        await props.fetchMaps();
+        toggleLoading(false)
+        props.setShowCreateMap(false);
+        
+      }
+			
 		};
 	};
 
