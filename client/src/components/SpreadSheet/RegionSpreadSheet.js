@@ -10,7 +10,7 @@ import {EditItem_Transaction,UpdateRegionItems_Transaction,SortRegionItems_Trans
 import './RegionSpreadSheet.css';
 import {GrAddCircle} from 'react-icons/gr';
 import {BiUndo,BiRedo} from 'react-icons/bi';
-
+import {BallSpinLoader,LineScalePulseOutRapid	} from 'react-pure-loaders';
 
 export const RegionSpreadSheet =(props)=>{
   let {map_id,region_id} = useParams();
@@ -81,6 +81,7 @@ export const RegionSpreadSheet =(props)=>{
 
 
   useEffect(()=>{
+    debugger;
     if(subregion_loading) console.log(subregion_loading);
     if(subregion_error) console.log(subregion_error);
     if(subregion_data){
@@ -212,7 +213,7 @@ export const RegionSpreadSheet =(props)=>{
     }
 	}
 
-
+  
   return (
     <Container className = "spreadsheet_container">
       <Row className ="button_row">
@@ -238,7 +239,7 @@ export const RegionSpreadSheet =(props)=>{
             </tr>
           </thead>
           <tbody>
-            {subregions.map((subregion,key)=>{
+            {subregion_loading? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
               return(
                 <Subregion pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children}/>
               )

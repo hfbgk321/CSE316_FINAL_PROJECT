@@ -10,10 +10,11 @@ import {DELETE_MAP,UPDATE_MAP_NAME} from '../../cache/mutations';
 import {CreateMap} from '../Modals/CreateMap/CreateMap';
 
 import {MapItem} from '../yourmaps/MapItem/MapItem';
+import { BallBeat,LineScalePulseOutRapid } from 'react-pure-loaders';
 
-import {EditItem_Transaction} from '../../utils/jsTPS';
 
 export const YourMaps =(props) =>{
+  
   const [showCreateMap,toggleShowCreateMap] = useState(false);
   const [isInit,setIsInit] = useState(false);
   const [maps,setMaps] = useState([]);
@@ -22,7 +23,7 @@ export const YourMaps =(props) =>{
   const [UpdateMapName] = useMutation(UPDATE_MAP_NAME);
 
   useEffect(() =>{
-    // debugger;
+    debugger;
     if(error) { console.log(error); }
     if(loading) { console.log(loading); }
     if(data){
@@ -85,7 +86,7 @@ export const YourMaps =(props) =>{
       <Row className ="justify-content-center d-flex align-items-center your_maps_container">
         <Col>
         <ListGroup className ="map_list_group" >
-            {maps.map((map,key)=>{
+            {loading ? <div style={{position:"relative",left:210,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true} /> </div>: maps.map((map,key)=>{
               return (
                <MapItem key ={key} map = {map} handleDeleteMap = {handleDeleteMap} fetchMaps ={refetch} handleChangeMapName ={handleChangeMapName} _id ={map._id}/>
               )

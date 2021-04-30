@@ -6,7 +6,7 @@ import {RegionalLandmarks} from './RegionalLandmarks/RegionalLandmarks';
 import {useQuery,useMutation} from '@apollo/client';
 import {GET_REGION_BY_ID,GET_SUBREGION_BY_ID,GET_MAP_BY_ID,GET_PREVIOUS_PATHS} from '../../cache/queries';
 import {BiUndo,BiRedo} from 'react-icons/bi';
-
+import { BallBeat,LineScalePulseOutRapid } from 'react-pure-loaders';
 
 export const RegionViewerMain = (props) => {
   const {map_id,region_id} = useParams();
@@ -117,6 +117,9 @@ export const RegionViewerMain = (props) => {
   },[previous_paths_data])
   
 
+  if(region_loading || subregions_loading || parentRegion_loading || previous_paths_loading){
+    return <div style={{position:"relative",left:700,top:300}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div>
+  }
 
   return (
     <Container>
