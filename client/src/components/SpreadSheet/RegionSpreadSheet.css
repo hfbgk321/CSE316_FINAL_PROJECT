@@ -40,3 +40,17 @@
   cursor: pointer;
   background-color: #ececec;
 }
+
+.table_row {
+  width: 100rem;
+}
+
+.region_spreadsheet_body {
+  border-style: solid;
+  border-color: grey;
+  overflow: auto;
+  height: 45rem;
+  width: 80rem;
+  position: relative;
+  right: 4rem;
+}

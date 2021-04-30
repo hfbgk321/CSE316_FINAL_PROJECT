@@ -6,7 +6,7 @@ import './RegionInfo.css';
 import {BsPencil} from 'react-icons/bs';
 
 export const RegionalInfo = (props) =>{
-  debugger;
+
   if(!props.isInit) {
     return "";
   }

@@ -23,7 +23,7 @@ export const YourMaps =(props) =>{
   const [UpdateMapName] = useMutation(UPDATE_MAP_NAME);
 
   useEffect(() =>{
-    debugger;
+
     if(error) { console.log(error); }
     if(loading) { console.log(loading); }
     if(data){

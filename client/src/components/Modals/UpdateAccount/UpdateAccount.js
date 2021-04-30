@@ -29,7 +29,7 @@ export const UpdateAccount = (props) =>{
 				return;
 			}
 		}
-    debugger;
+
 
 		const { loading, error, data } = await Update({ variables: { ...input } });
 		if (loading) { toggleLoading(true) };
@@ -117,7 +117,7 @@ export const UpdateAccount = (props) =>{
             Close
           </Button>
           <Button variant="primary" onClick={handleCreateAccount}>
-            Sign Up
+            Update
           </Button>
         </Modal.Footer>
       </Modal>

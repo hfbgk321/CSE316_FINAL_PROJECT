@@ -81,7 +81,7 @@ export const RegionSpreadSheet =(props)=>{
 
 
   useEffect(()=>{
-    debugger;
+
     if(subregion_loading) console.log(subregion_loading);
     if(subregion_error) console.log(subregion_error);
     if(subregion_data){
@@ -156,7 +156,7 @@ export const RegionSpreadSheet =(props)=>{
   }
 
   const registerSortItemsTransaction = async (sortingCriteria) =>{
-    debugger;
+ 
     let oldRegionsIds = [];
     let newRegionsToSort = [];
 
@@ -223,10 +223,11 @@ export const RegionSpreadSheet =(props)=>{
           <Col sm ={9}><h3 style ={{position:"relative",left:130}}>Region Name: {mapInfo.name}</h3></Col>
       </Row>
         <Row className="table_row">
-        <Table striped bordered hover>
+        <div className ="region_spreadsheet_body">
+          <Table striped bordered hover>
           <thead>
             <tr>
-              <th>#</th>
+              <th>Options</th>
               <th onClick ={async () => await registerSortItemsTransaction("name")} 
               className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Name</th>
               <th onClick = {async () => await registerSortItemsTransaction("capital")} 
@@ -238,15 +239,22 @@ export const RegionSpreadSheet =(props)=>{
               <th className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Landmarks</th>
             </tr>
           </thead>
-          <tbody>
+         
+          <tbody >
+            
             {subregion_loading? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
               return(
                 <Subregion pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children}/>
               )
             })}
             
+            
+            
           </tbody>
+          
         </Table>
+        </div>
+       
         </Row>
         
     </Container>

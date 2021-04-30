@@ -13,15 +13,26 @@ module.exports ={
       maps.sort((a,b) => a.access_id - b.access_id);
       if(maps) return (maps); 
     },
-    getMapById: async (_,args,{res}) =>{
+    getMapById: async (_,args,{req}) =>{
       let {_id} = args;
       let obj_id = new ObjectId(_id);
       let current_map = await Map.findById({_id:obj_id});
+      let all_maps = await Map.find({ownerId: new ObjectId(req.userId)});
+      if(all_maps.length == 1) {
+        current_map;
+      }
+
+      all_maps.sort((a,b) => a.access_id - b.access_id);
+
       if(current_map){
         let current_map_access_id = current_map.access_id;
-        let most_recently_accessed_map = await Map.findOneAndUpdate({access_id:0},{access_id:current_map_access_id},{new:true});
-        current_map.access_id = 0;
-        await current_map.save();
+        console.log(`Current Id: ${current_map_access_id}`);
+
+        let most_recently_accessed_map = await Map.findOneAndUpdate({_id:all_maps[0]._id},{access_id:current_map_access_id},{new:true});
+        console.log(most_recently_accessed_map);
+        current_map.access_id = all_maps[0].access_id;
+        let updated = await current_map.save();
+        console.log(updated);
         return current_map;
       }
       return {};
@@ -45,7 +56,6 @@ module.exports ={
         map.access_id = all_maps[all_maps.length-1].access_id+1;
       }
       
-
       let new_map = new Map(map);
 
       const saved = await new_map.save();
