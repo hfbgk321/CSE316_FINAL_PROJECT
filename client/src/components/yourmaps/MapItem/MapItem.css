@@ -8,3 +8,16 @@
   width: auto;
   margin-bottom: 5rem;
 }
+
+.map_list_item:hover {
+  cursor: pointer;
+  background-color: #f8f9fa;
+}
+
+.map_list_item {
+  margin: 0.5rem;
+}
+.map_list_item_input {
+  margin: 0.5;
+  height: 20rem;
+}

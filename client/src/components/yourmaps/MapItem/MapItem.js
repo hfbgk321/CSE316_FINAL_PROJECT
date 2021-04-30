@@ -53,7 +53,8 @@ export const MapItem = (props) =>{
         {
           !editMapName ? <ListGroup.Item className = "map_list_item" key ={props.key} onDoubleClick={handleDoubleClick} onClick = {handleClick}>{props.map.name}
           </ListGroup.Item> : <Form>
-            <Form.Control type="text" placeholder="Enter your new name" onBlur ={handleEditMapName} autoFocus={true} name = "name"/>
+            <Form.Control className ="map_list_item" type="text" placeholder="Enter your new name" onBlur ={handleEditMapName} autoFocus={true} 
+            name = "name" />
           </Form>
         }
           
