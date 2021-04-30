@@ -1,0 +1,42 @@
+.spreadsheet_container {
+  width: 80rem;
+}
+.button_row {
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+.table_header_without_regions {
+  pointer-events: none;
+  background-color: #a2a6ab;
+  cursor: pointer;
+}
+
+.tabler_header_with_regions {
+  pointer-events: unset;
+  background-color: white;
+  cursor: pointer;
+}
+
+.tabler_header_with_regions:hover {
+  cursor: pointer;
+}
+
+.undo_button:hover {
+  cursor: pointer;
+  background-color: #ececec;
+}
+
+.button_diabled {
+  cursor: none;
+  pointer-events: none;
+}
+
+.redo_button:hover {
+  cursor: pointer;
+  background-color: #ececec;
+}
+
+.add_button:hover {
+  cursor: pointer;
+  background-color: #ececec;
+}

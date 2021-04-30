@@ -30,12 +30,14 @@
     "graphql-passport": "^0.6.3",
     "helmet": "^3.23.3",
     "jsonwebtoken": "^8.5.1",
+    "material-design-icons": "^3.0.1",
     "mongoose": "^5.9.19",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.4",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",
     "react-bootstrap": "^1.5.2",
+    "react-icons": "^4.2.0",
     "validator": "^13.1.1",
     "xss-clean": "^0.1.1"
   }

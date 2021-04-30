@@ -5,7 +5,7 @@ import {useParams} from 'react-router-dom';
 import {ClickedRegion} from '../ClickedRegion/ClickedRegion';
 import {useQuery,useMutation} from '@apollo/client';
 import {ADD_LANDMARK_TO_REGION,CHANGE_LANDMARK_AT_POS} from '../../../cache/mutations';
-
+import "./RegionLandmarks.css";
 
 
 
@@ -76,18 +76,14 @@ export const RegionalLandmarks = (props) =>{
     return "";
   }
   return (
-    <Container>
+    <Container className = "regional_landmarks_container">
       <Row>
         <Col>
-          <h1>This is the regional landmarks component</h1>
-        </Col>
-      </Row>
-      <Row>
-        <Col>
-          <ul>
+          <ul className ="region_landmarks_list">
+            <div className ="region_landmarks_inner_div">
             {props.siblings.map((sibling,key) =>{
               return (
-                <li>
+                <li className ="regional_landmarks_list_item">
                   {sibling._id === props.region._id ? sibling.landmarks.map((landmark,key)=>{
                     return <ClickedRegion landmark ={landmark} key = {key} _id ={sibling._id} pos ={key} handleChangeLandmark ={handleChangeLandmark}/>
                   }): sibling.landmarks.map((landmark,key)=>{
@@ -96,6 +92,8 @@ export const RegionalLandmarks = (props) =>{
                 </li>
               )
             })}
+            </div>
+            
           </ul>
         </Col>
       </Row>

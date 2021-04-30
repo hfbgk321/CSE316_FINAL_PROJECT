@@ -2,6 +2,7 @@ import react,{useState,useEffect} from 'react';
 import { Redirect } from 'react-router';
 import {Container,Button,Row,Col,ListGroup} from 'react-bootstrap';
 import globe from '../../images/globe.jpg';
+import fun_gif from '../../images/tenor.gif'
 import "./YourMaps.css";
 import * as queries from '../../cache/queries';
 import {useQuery,useMutation} from '@apollo/client';
@@ -83,7 +84,7 @@ export const YourMaps =(props) =>{
       <CreateMap showCreateMap ={showCreateMap} setShowCreateMap ={setShowCreateMap} fetchMaps ={refetch} history ={props.history}/>
       <Row className ="justify-content-center d-flex align-items-center your_maps_container">
         <Col>
-        <ListGroup variant="flush" className ="map_list_group">
+        <ListGroup className ="map_list_group" >
             {maps.map((map,key)=>{
               return (
                <MapItem key ={key} map = {map} handleDeleteMap = {handleDeleteMap} fetchMaps ={refetch} handleChangeMapName ={handleChangeMapName} _id ={map._id}/>
@@ -92,7 +93,7 @@ export const YourMaps =(props) =>{
         </ListGroup>
         </Col>
         <Col>
-          <Row><img src ={globe} style={{height:200,width:500}}/></Row>
+          <Row className ="justify-content-center d-flex align-items-center"><img className ="gif_properties" src={fun_gif} alt="loading..." /></Row>
           <Row>
             <Button variant="secondary" size="lg" block onClick={setShowCreateMap}> Create New Map</Button>
         </Row>

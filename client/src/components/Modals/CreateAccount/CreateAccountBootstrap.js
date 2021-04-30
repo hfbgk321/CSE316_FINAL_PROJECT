@@ -41,11 +41,10 @@ export const CreateAccountBootstrap = (props) =>{
         displayErrorMsg(true);
         return;
 			}
-			// else {
-			// 	await props.fetchUser();
-      //   props.history.push("/your_maps");
-			// }
-			props.setShowLogin();
+			else {
+				props.setShowLogin();
+			}
+			
 
 		};
 	};
@@ -89,7 +88,7 @@ export const CreateAccountBootstrap = (props) =>{
         }
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={() =>props.setShowLogin(false)}>
+          <Button variant="secondary" onClick={() =>props.setShowCreate(false)}>
             Close
           </Button>
           <Button variant="primary" onClick={handleCreateAccount}>

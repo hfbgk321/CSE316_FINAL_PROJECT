@@ -5,7 +5,7 @@ import {RegionalInfo} from './RegionalInfo/RegionalInfo';
 import {RegionalLandmarks} from './RegionalLandmarks/RegionalLandmarks';
 import {useQuery,useMutation} from '@apollo/client';
 import {GET_REGION_BY_ID,GET_SUBREGION_BY_ID,GET_MAP_BY_ID,GET_PREVIOUS_PATHS} from '../../cache/queries';
-
+import {BiUndo,BiRedo} from 'react-icons/bi';
 
 
 export const RegionViewerMain = (props) => {
@@ -121,12 +121,12 @@ export const RegionViewerMain = (props) => {
   return (
     <Container>
       <Row>
-        <Col>
-        <Button variant = "secondary">Undo</Button>
+        <Col sm ={1}>
+          <BiUndo size = {50} color={"black"} />
         </Col>
-        <Col>
-        <Button variant = "secondary">Redo</Button>
-      </Col>
+        <Col sm ={1}>
+          <BiRedo size = {50} color={"black"} />
+        </Col>
       </Row>
       
       <Row>

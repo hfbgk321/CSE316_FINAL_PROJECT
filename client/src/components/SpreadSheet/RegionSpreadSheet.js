@@ -7,6 +7,10 @@ import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP,DELETE_SUBREGION,UPDATE_SUBREGION_F
 import {Subregion} from './Subregion/subregion';
 import { set } from 'mongoose';
 import {EditItem_Transaction,UpdateRegionItems_Transaction,SortRegionItems_Transaction} from '../../utils/jsTPS';
+import './RegionSpreadSheet.css';
+import {GrAddCircle} from 'react-icons/gr';
+import {BiUndo,BiRedo} from 'react-icons/bi';
+
 
 export const RegionSpreadSheet =(props)=>{
   let {map_id,region_id} = useParams();
@@ -210,12 +214,12 @@ export const RegionSpreadSheet =(props)=>{
 
 
   return (
-    <Container fluid className = "spreadsheet_container">
+    <Container className = "spreadsheet_container">
       <Row className ="button_row">
-          <Col sm ={1}><Button variant="primary" onClick ={() =>{AddOrDeleteSubregion(subregions.length,"",{...input},1)}} >Add Region</Button>{' '}</Col>
-          <Col sm ={1}><Button variant="secondary" onClick ={tpsUndo} disabled={hasUndo ? false: true}>Undo</Button>{' '}</Col>
-          <Col sm ={1}><Button variant="secondary" onClick ={tpsRedo} disabled={hasRedo ? false: true}>Redo</Button>{' '}</Col>
-          <Col sm ={9}><h3>Region Name: {mapInfo.name}</h3></Col>
+          <Col sm ={1}><GrAddCircle className ="add_button" size={50}  onClick ={() =>{AddOrDeleteSubregion(subregions.length,"",{...input},1)}} /></Col>
+          <Col sm ={1}><BiUndo className ={hasUndo?"undo_button" :"button_diabled"} size={50} onClick ={tpsUndo} color ={hasUndo ? "black" : "grey"} /></Col>
+          <Col sm ={1}><BiRedo className ={hasRedo?"redo_button" :"button_diabled"} size={50} onClick ={tpsRedo} color ={hasRedo ? "black" : "grey"}/></Col>
+          <Col sm ={9}><h3 style ={{position:"relative",left:130}}>Region Name: {mapInfo.name}</h3></Col>
       </Row>
         <Row className="table_row">
         <Table striped bordered hover>
@@ -223,14 +227,14 @@ export const RegionSpreadSheet =(props)=>{
             <tr>
               <th>#</th>
               <th onClick ={async () => await registerSortItemsTransaction("name")} 
-              style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Name</th>
+              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Name</th>
               <th onClick = {async () => await registerSortItemsTransaction("capital")} 
-              style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Capital</th>
+              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Capital</th>
               <th onClick = {async () => await registerSortItemsTransaction("leader")}
-              style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Leader</th>
+              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Leader</th>
               <th onClick = {async () => await registerSortItemsTransaction("flag")}
-              style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Flag</th>
-              <th style ={{pointerEvents: subregions.length == 0 ? "none":"auto", backgroundColor:subregions.length == 0 ? "#A2A6AB":"white"}}>Landmarks</th>
+              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Flag</th>
+              <th className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Landmarks</th>
             </tr>
           </thead>
           <tbody>

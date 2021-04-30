@@ -3,6 +3,11 @@ import { useDebugValue } from 'react';
 import {Button,Row,Col,Form} from 'react-bootstrap';
 import {Link,useParams} from 'react-router-dom';
 import {DeleteRegion} from '../../Modals/DeleteRegion/DeleteRegion';
+import './Subregion.css';
+
+
+
+
 export const Subregion = (props) =>{
 
   const [editName,toggleEditName] = useState(false);
@@ -173,7 +178,7 @@ export const Subregion = (props) =>{
         )
       }
 
-      <td onClick ={handleClickLandmarks}>{props.landmarks[0]+","+props.landmarks[1]+" ....."}</td>
+      <td onClick ={handleClickLandmarks} className ="landmark_td">{props.landmarks[0]+","+props.landmarks[1]+" ....."}</td>
   </tr>
   {showDeleteRegion && <DeleteRegion setShowDeleteRegion ={setShowDeleteRegion} showDeleteRegion ={showDeleteRegion} handleDeleteSubregion ={handleDeleteSubregion} />}
   </>

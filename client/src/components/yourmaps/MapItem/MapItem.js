@@ -1,7 +1,7 @@
 import react,{useState} from 'react';
 import {ListGroup,Button,Container,Row,Col,Form} from 'react-bootstrap';
 import {DeleteMap} from '../../Modals/DeleteMap/DeleteMap';
-
+import './MapItem.css';
 export const MapItem = (props) =>{
 
   const [showDeleteMap,toggleShowDeleteMap] = useState(false);
@@ -48,7 +48,7 @@ export const MapItem = (props) =>{
 
   return (
     <Container>
-      <Row>      
+      <Row className ="align-items-center map_item_row">      
         <Col>
         {
           !editMapName ? <ListGroup.Item className = "map_list_item" key ={props.key} onDoubleClick={handleDoubleClick} onClick = {handleClick}>{props.map.name}

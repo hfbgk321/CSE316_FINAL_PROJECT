@@ -67,7 +67,7 @@ export const NavbarComponent = (props) =>{
             props.history.push("/welcome");
           }
         }}>The World Data Mapper</Navbar.Brand>
-        <Nav>
+        <Nav style={{position:"relative",left:60}}>
         {props.prevPaths.map((path,key)=>{
           return (
             <Nav.Item>

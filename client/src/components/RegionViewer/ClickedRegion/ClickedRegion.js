@@ -17,10 +17,16 @@ export const ClickedRegion = (props) =>{
   return (
     <>
      {
-      !editLandmark ? <h1 onClick ={handleClick} style ={{color:"blue"}}>
-      {props.landmark} </h1> : 
+      !editLandmark ? 
+      <Row>
+        <Button variant ="danger" style ={{height:40,width:"auto"}}>X</Button>
+      <h3 onClick ={handleClick} style ={{color:"blue",marginBottom:20,marginLeft:10}}>
+      {props.landmark} 
+      </h3>
+      </Row>
+       : 
       <Form>
-      <Form.Control type="text" placeholder="Enter your new landmark name" onBlur ={handleBlur} autoFocus={true} name = "name"/>
+      <Form.Control type="text" placeholder="Enter your new landmark name" onBlur ={handleBlur} autoFocus={true} name = "name" className ="clicked_region_input"/>
     </Form>
     }
     </>
