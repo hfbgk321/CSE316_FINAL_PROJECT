@@ -167,8 +167,8 @@ export const UPDATE_REGION_CHILDREN = gql`
 `;
 
 export const ADD_LANDMARK_TO_REGION = gql`
-  mutation AddLandmarkToRegion($_id:String,$landmark:String){
-    addLandmarkToRegion(_id:$_id,landmark:$landmark){
+  mutation AddLandmarkToRegion($_id:String,$landmark:String,$pos:Int){
+    addLandmarkToRegion(_id:$_id,landmark:$landmark,pos:$pos){
       _id
 		  children
       name

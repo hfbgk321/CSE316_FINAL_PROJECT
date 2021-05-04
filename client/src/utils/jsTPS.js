@@ -130,6 +130,120 @@ export class UpdateRegionItems_Transaction extends jsTPS_Transaction{
     }
 }
 
+//adding or deleting landmarks
+//0 - add 1-delete
+//_id:$_id,landmark:$landmark <-+ pos
+export class EditLandmarks_Transaction extends jsTPS_Transaction{
+    constructor(_id,pos,opcode,landmark,delfunction,addfunction){
+        super();
+        this._id = _id;
+        this.pos = pos;
+        this.opcode = opcode;
+        this.deleteLandmark = delfunction;
+        this.addLandmark = addfunction;
+        this.landmark = landmark
+    }
+
+    async doTransaction(){
+        let {data} = this.opcode == 0? await this.addLandmark({
+            variables:{
+                _id:this._id,
+                pos:this.pos,
+                landmark:this.landmark
+            }
+        }): await this.deleteLandmark({
+            variables:{
+                _id:this._id,
+                pos:this.pos
+            }
+        });
+        return data;
+    }
+
+    async undoTransaction(){
+        let {data} = this.opcode == 1? await this.addLandmark({
+            variables:{
+                _id:this._id,
+                pos:this.pos,
+                landmark:this.landmark
+            }
+        }): await this.deleteLandmark({
+            variables:{
+                _id:this._id,
+                pos:this.pos
+            }
+        });
+        return data;
+    }
+}
+
+//for changing name of landmark
+//_id:$_id,new_landmark:$new_landmark,pos:$pos
+export class UpdateLandmarks_Transaction extends jsTPS_Transaction{
+    constructor(_id,old_landmark, new_landmark,pos,callback){
+        super();
+        this._id = _id;
+        this.old_landmark = old_landmark;
+        this.new_landmark = new_landmark;
+        this.pos = pos;
+        this.updateFunction = callback;
+    }
+
+
+    async doTransaction(){
+        debugger;
+        let {data} = await this.updateFunction({
+            variables:{
+                _id:this._id,
+                new_landmark:this.new_landmark,
+                pos:this.pos
+            }
+        });
+        return data;
+    }
+
+    async undoTransaction(){
+        let {data} = await this.updateFunction({
+            variables:{
+                _id:this._id,
+                new_landmark:this.old_landmark,
+                pos:this.pos
+            }
+        });
+        return data;
+    }
+}
+
+//_id:$_id,old_parent_id:$old_parent_id,new_parent_id:$new_parent_id
+export class EditParents_Transaction extends jsTPS_Transaction{
+    constructor(_id, newParent,oldParent,callback){
+        super();
+        this._id = _id;
+        this.newParent = newParent;
+        this.oldParent = oldParent;
+        this.updateFunction = callback;
+    }
+
+    async doTransaction(){
+        let {data} = await this.updateFunction({variables:{
+            _id:this._id,
+            old_parent_id:this.oldParent,
+            new_parent_id:this.newParent
+        }});
+        return data;
+    }
+
+
+    async undoTransaction(){
+        let {data} = await this.updateFunction({variables:{
+            _id:this._id,
+            old_parent_id:this.newParent,
+            new_parent_id:this.oldParent
+        }});
+        return data;
+    }
+}
+
 
 export class EditItem_Transaction extends jsTPS_Transaction {
 	constructor(_id, field, new_value,old_value, callback) {

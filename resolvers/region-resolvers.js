@@ -173,11 +173,29 @@ module.exports ={
     },
 
     addLandmarkToRegion : async (_,args,{res}) =>{
-      let {_id,landmark} = args;
+      let {_id,landmark,pos} = args;
       let region = await Region.findById({_id:_id});
       let region_landmarks = region.landmarks;
 
-      let updated = await Region.findByIdAndUpdate({_id:_id},{landmarks:[...region_landmarks,landmark]},{new:true});
+      let new_landmark_arr = [];
+
+      let added = false;
+
+      for(let x = 0 ; x< region_landmarks.length;x++){
+        if(x == pos){
+          new_landmark_arr.push(landmark);
+          new_landmark_arr.push(region_landmarks[x]);
+          added = true;
+        }else{
+          new_landmark_arr.push(region_landmarks[x]);
+        }
+      }
+
+      if(!added){
+        new_landmark_arr.push(landmark);
+      }
+
+      let updated = await Region.findByIdAndUpdate({_id:_id},{landmarks:[...new_landmark_arr]},{new:true});
       if(updated){
         return updated;
       }

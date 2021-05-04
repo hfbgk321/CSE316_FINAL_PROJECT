@@ -24,6 +24,8 @@ export const RegionViewerMain = (props) => {
   const [mapId,setMapId] = useState("");
   const [previousSibling,setPreviousSibling] = useState("");
   const [nextSibling,setNextSibling] = useState("");
+  const [hasUndo,setHasUndo] = useState(false);
+  const [hasRedo,setHasRedo] = useState(false);
 
   const {loading:region_loading,error:region_error,data:region_data,refetch:region_refetch} = useQuery(GET_REGION_BY_ID,{variables:{_id:region_id}});
 
@@ -164,6 +166,33 @@ export const RegionViewerMain = (props) => {
     }
   }
 
+  const tpsUndo =async () =>{
+      console.log("undo");
+      if(props.tps.hasTransactionToUndo()){
+        await props.tps.undoTransaction();
+        await region_refetch();
+        await subregions_refetch();
+        await parentRegion_refetch();
+        await previous_paths_refetch();
+        setHasUndo(props.tps.hasTransactionToUndo());
+        setHasRedo(props.tps.hasTransactionToRedo());
+      }
+  }
+
+  const tpsRedo = async() =>{
+    console.log("redo");
+    if(props.tps.hasTransactionToRedo()){
+      await props.tps.doTransaction();
+      await region_refetch();
+      await subregions_refetch();
+      await parentRegion_refetch();
+      await previous_paths_refetch();
+      setHasUndo(props.tps.hasTransactionToUndo());
+      setHasRedo(props.tps.hasTransactionToRedo());
+    }
+  }
+
+
   
 
   if(region_loading || subregions_loading || parentRegion_loading || previous_paths_loading){
@@ -174,10 +203,10 @@ export const RegionViewerMain = (props) => {
     <Container>
       <Row>
         <Col sm ={3}>
-          <BiUndo size = {50} color={"black"} />
+          <BiUndo size = {50}  className ={hasUndo? "undo_redo_button": "undo_redo_button_disabled"} onClick={tpsUndo}/>
         </Col>
         <Col sm ={3}>
-          <BiRedo size = {50} color={"black"} />
+          <BiRedo size = {50} className ={hasRedo? "undo_redo_button": "undo_redo_button_disabled"} onClick ={tpsRedo} />
         </Col>
         <Col sm ={3}>
           <FaArrowLeft size = {40} className ={previousSibling === undefined ? "prev_sibling_arrow_disabled" : "prev_sibling_arrow"} onClick ={()=>{
@@ -193,10 +222,10 @@ export const RegionViewerMain = (props) => {
       
       <Row>
         <Col>
-          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} parentRegion ={parentRegion} isMap ={isMap} history ={props.history} parentRegion_refetch ={parentRegion_refetch} previous_paths_refetch ={previous_paths_refetch} map_id ={mapId}/>
+          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} parentRegion ={parentRegion} isMap ={isMap} history ={props.history} parentRegion_refetch ={parentRegion_refetch} previous_paths_refetch ={previous_paths_refetch} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo}/>
         </Col>
         <Col>
-          <RegionalLandmarks region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id ={mapId}/>
+          <RegionalLandmarks region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps}/>
         </Col>
       </Row>
     </Container>

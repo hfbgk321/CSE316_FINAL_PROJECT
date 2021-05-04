@@ -1,14 +1,15 @@
-.prev_sibling_arrow {
+.prev_sibling_arrow,
+.undo_redo_button {
   color: black;
   cursor: pointer;
 }
 
-.prev_sibling_arrow:hover {
+.prev_sibling_arrow:hover,
+.undo_redo_button:hover {
   background-color: #f8f9fa;
 }
 
-.prev_sibling_arrow_disabled {
+.prev_sibling_arrow_disabled,
+.undo_redo_button_disabled {
   color: grey;
-  pointer-events: none;
-  cursor: none;
 }
