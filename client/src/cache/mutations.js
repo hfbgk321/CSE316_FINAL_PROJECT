@@ -183,6 +183,24 @@ export const ADD_LANDMARK_TO_REGION = gql`
   }
 `;
 
+export const DELETE_LANDMARK_FROM_REGION = gql`
+  mutation DeleteLandmarkFromRegion($_id:String,$pos:Int){
+    deleteLandmarkFromRegion(_id:$_id,pos:$pos){
+      _id
+		  children
+      name
+      capital
+      leader
+      flag
+      landmarks
+      parent_id
+      isParentAMap
+      map
+    }
+  }
+
+`;
+
 export const CHANGE_LANDMARK_AT_POS = gql`
   mutation ChangeLandmarkAtPos($_id:String,$new_landmark:String,$pos:Int){
     changeLandmarkAtPos(_id:$_id,new_landmark:$new_landmark,pos:$pos){
@@ -217,6 +235,8 @@ export const CHANGE_PARENT = gql`
     }
   }
 `;
+
+
 
 
 

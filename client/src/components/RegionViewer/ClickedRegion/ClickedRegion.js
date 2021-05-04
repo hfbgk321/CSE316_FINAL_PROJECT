@@ -19,7 +19,7 @@ export const ClickedRegion = (props) =>{
      {
       !editLandmark ? 
       <Row>
-        <Button variant ="danger" style ={{height:40,width:"auto"}}>X</Button>
+        <Button variant ="danger" style ={{height:40,width:"auto"}} onClick = {async ()=> await props.handleAddDeleteLandmark(props._id,props.pos,1,props.landmark,)}>X</Button>
       <h3 onClick ={handleClick} style ={{color:"blue",marginBottom:20,marginLeft:10}}>
       {props.landmark} 
       </h3>

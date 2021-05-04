@@ -202,6 +202,26 @@ module.exports ={
       return {};
     },
 
+    deleteLandmarkFromRegion: async (_,args,{req}) =>{
+      let {_id,pos} = args;
+      let region = await Region.findById({_id:_id});
+      let region_landmarks = region.landmarks;
+      let new_region_landmarks = [];
+
+      for(let x = 0; x< region_landmarks.length;x++){
+        if(x == pos){
+          continue;
+        }
+        new_region_landmarks.push(region_landmarks[x]);
+      }
+
+      let updated = await Region.findByIdAndUpdate({_id:_id},{landmarks:[...new_region_landmarks]},{new:true});
+      if(updated){
+        return updated;
+      }
+      return {};
+    },
+
     changeLandmarkAtPos: async (_,args,{res}) =>{
       let {_id,new_landmark,pos} = args;
 
