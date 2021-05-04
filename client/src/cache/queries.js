@@ -36,6 +36,7 @@ export const GET_SUBREGION_BY_ID = gql`
     	landmarks
     	parent_id
 			isParentAMap
+			map
 		}
 	}
 `;
@@ -64,6 +65,7 @@ export const GET_REGION_BY_ID = gql`
     	landmarks
     	parent_id
 			isParentAMap
+			map
 		}
 	}
 `;
@@ -75,4 +77,23 @@ export const GET_PREVIOUS_PATHS = gql`
     _id
 		}
 	}
+`;
+
+export const GET_ALL_REGIONS_EXCEPT_CURRENT = gql`
+  query GetAllRegionsExceptCurrent($_id:String){
+		getAllRegionsExceptCurrent(_id:$_id){
+			_id
+			children
+    	name
+    	capital
+    	leader
+    	flag
+    	landmarks
+    	parent_id
+			isParentAMap
+			map
+		}
+	}
+
+
 `;

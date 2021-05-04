@@ -4,8 +4,67 @@ import {useParams} from 'react-router-dom';
 import globe from '../../../images/globe.jpg'
 import './RegionInfo.css';
 import {BsPencil} from 'react-icons/bs';
+import {ChangeParent} from '../../Modals/ChangeParent/ChangeParent';
+import {useQuery,useMutation} from '@apollo/client';
+import {GET_ALL_REGIONS_EXCEPT_CURRENT,GET_ALL_MAPS} from '../../../cache/queries';
+
+
 
 export const RegionalInfo = (props) =>{
+  const [showChangeParent,toggleChangeParent] = useState(false);
+  const [potentialParentsRegions,setPotentialParentsRegions] = useState([]);
+  const [potentialParentsMaps,setPotentialParentsMaps] = useState([]);
+  console.log(props.region_id);
+  const {loading:exclude_current_loading,error:exclude_current_error,data:exclude_current_data,refetch:exclude_current_refetch} = useQuery(GET_ALL_REGIONS_EXCEPT_CURRENT,{
+    variables:{
+      _id:props.region_id
+    }
+  });
+
+
+  useEffect(()=>{
+    if(exclude_current_loading){
+      console.log(exclude_current_loading);
+    }
+
+    if(exclude_current_error){
+      console.log(exclude_current_error.message);
+      return exclude_current_error.message;
+    }
+    if(exclude_current_data){
+      let {getAllRegionsExceptCurrent} = exclude_current_data;
+      if(getAllRegionsExceptCurrent!==undefined){
+        setPotentialParentsRegions(getAllRegionsExceptCurrent);
+      }
+    }
+  },[exclude_current_data]);
+
+
+  const {loading:all_maps_loading,error:all_maps_error,data:all_maps_data,refetch:all_maps_refetch} = useQuery(GET_ALL_MAPS);
+
+  useEffect(() =>{
+    if(all_maps_loading){
+      console.log(all_maps_loading);
+    }
+
+    if(all_maps_error){
+      console.log(all_maps_error.message);
+      return all_maps_error.message;
+    }
+
+    if(all_maps_data){
+      let {getAllMaps} = all_maps_data;
+      if(getAllMaps!==undefined){
+        setPotentialParentsMaps(getAllMaps);
+      }
+    }
+  },[all_maps_data]);
+
+
+
+  const setChangeParent = () =>{
+    toggleChangeParent(!showChangeParent);
+  }
 
   if(!props.isInit) {
     return "";
@@ -28,16 +87,18 @@ export const RegionalInfo = (props) =>{
         <Col>
         <h4 className ="parent_name" onClick ={()=>{
             if(props.isMap){
-              window.location = `/your_maps/${props.map_id}`;
+              props.history.push(`/your_maps/${props.map_id}`);
+              // window.location = `/your_maps/${props.map_id}`;
             }else{
-              window.location = `/your_maps/${props.map_id}/${props.parentRegion._id}`;
+              props.history.push(`/your_maps/${props.map_id}/${props.parentRegion._id}`);
+              // window.location = `/your_maps/${props.map_id}/${props.parentRegion._id}`;
             }
           }}>
           {props.parentRegion.name}
         </h4>
         </Col>
         <Col>
-        <BsPencil size={25} className ="pencil" />
+        <BsPencil size={25} className ="pencil" onClick ={setChangeParent}/>
         </Col>
       </Row>
     
@@ -57,6 +118,7 @@ export const RegionalInfo = (props) =>{
         </Col>
       </Row>
       </div>
+      <ChangeParent setChangeParent ={setChangeParent} showChangeParent ={showChangeParent} loading ={exclude_current_loading || all_maps_loading} potentialParents ={[...potentialParentsMaps,...potentialParentsRegions]} parentRegion ={props.parentRegion} history ={props.history} region = {props.region} region_refetch ={props.region_refetch} subregions_refetch ={props.subregions_refetch} parentRegion_refetch ={props.parentRegion_refetch} previous_paths_refetch ={props.previous_paths_refetch} exclude_current_refetch = {exclude_current_refetch} all_maps_refetch ={all_maps_refetch} />
       
     </Container>
   )

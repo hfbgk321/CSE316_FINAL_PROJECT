@@ -6,16 +6,24 @@ import {RegionalLandmarks} from './RegionalLandmarks/RegionalLandmarks';
 import {useQuery,useMutation} from '@apollo/client';
 import {GET_REGION_BY_ID,GET_SUBREGION_BY_ID,GET_MAP_BY_ID,GET_PREVIOUS_PATHS} from '../../cache/queries';
 import {BiUndo,BiRedo} from 'react-icons/bi';
+import {BsArrow90DegLeft,BsArrow90DegRight} from 'react-icons/bs';
 import { BallBeat,LineScalePulseOutRapid } from 'react-pure-loaders';
+import {FaArrowLeft,FaArrowRight} from 'react-icons/fa';
+import './RegionViewerMain.css';
+
 
 export const RegionViewerMain = (props) => {
-  const {map_id,region_id} = useParams();
+  const {region_id} = useParams();
+  console.log(region_id);
   const [region,setRegion] = useState({});
   const [sibling,setSiblings] = useState([]);
   const [isInit,setIsInit] = useState(false);
   const [isMap,setIsMap] = useState(false);
   const [parentId,setParentId] = useState("");
   const [parentRegion,setParentRegion] = useState({});
+  const [mapId,setMapId] = useState("");
+  const [previousSibling,setPreviousSibling] = useState("");
+  const [nextSibling,setNextSibling] = useState("");
 
   const {loading:region_loading,error:region_error,data:region_data,refetch:region_refetch} = useQuery(GET_REGION_BY_ID,{variables:{_id:region_id}});
 
@@ -34,22 +42,29 @@ export const RegionViewerMain = (props) => {
         setRegion(getRegionById);
         if(getRegionById.isParentAMap){
           setIsMap(true);
-          setParentId(getRegionById.parent_id);
+        }else{
+          setIsMap(false);
         }
+        setParentId(getRegionById.parent_id);
+        setMapId(getRegionById.map);
       }
       setIsInit(true);
     }else{
       setIsInit(false);
     }
-  },[region_data]);
+  },[region_data,region,parentId]);
+
+  
 
   const {loading:subregions_loading, error:subregions_error,data:subregions_data,refetch:subregions_refetch} = useQuery(GET_SUBREGION_BY_ID,{
     variables:{
       parent_id:region.parent_id
-    }
+    },
+    skip: region.parent_id === undefined
   })
 
   useEffect(() =>{
+
     if(subregions_loading) console.log(subregions_loading);
     if(subregions_error) {
       console.log(`Error: ${subregions_error.message}`);
@@ -58,10 +73,35 @@ export const RegionViewerMain = (props) => {
     if(subregions_data){
       let {getRegionsByParentId} =subregions_data;
       if(getRegionsByParentId !== null){
-        setSiblings(getRegionsByParentId)
+        setSiblings(getRegionsByParentId);
+        handleSetSiblingNavigation(getRegionsByParentId);
       }
     }
   },[subregions_data,sibling]);
+
+
+  const handleSetSiblingNavigation = (sibling_arr) =>{
+    if(sibling_arr.length == 1){
+      setPreviousSibling(undefined);
+      setNextSibling(undefined);
+      return;
+    }
+
+    for(let x = 0; x< sibling_arr.length;x++){
+      if(sibling_arr[x]._id === region_id){
+        if(x == 0){
+          setPreviousSibling(undefined);
+          setNextSibling(sibling_arr[x+1]._id);
+        }else if(x == sibling_arr.length-1){
+          setPreviousSibling(sibling_arr[x-1]._id);
+          setNextSibling(undefined);
+        }else{
+          setPreviousSibling(sibling_arr[x-1]._id);
+          setNextSibling(sibling_arr[x+1]._id);
+        }
+      }
+    }
+  }
 
 
   const {loading:parentRegion_loading, error:parentRegion_error,data:parentRegion_data,refetch:parentRegion_refetch} = useQuery(isMap ? GET_MAP_BY_ID : GET_REGION_BY_ID,{
@@ -114,7 +154,16 @@ export const RegionViewerMain = (props) => {
         props.handleSetPaths(getRegionPaths);
       }
     }
-  },[previous_paths_data])
+  },[previous_paths_data]);
+
+  const handleSiblingNavigation = (direction) =>{
+    if(direction === "prev"&& previousSibling !== undefined){
+      window.location = `/your_maps/${previousSibling}/region/viewer`;
+    }else if(direction === "next" && nextSibling!==undefined){
+      window.location = `/your_maps/${nextSibling}/region/viewer`;
+    }
+  }
+
   
 
   if(region_loading || subregions_loading || parentRegion_loading || previous_paths_loading){
@@ -124,20 +173,30 @@ export const RegionViewerMain = (props) => {
   return (
     <Container>
       <Row>
-        <Col sm ={1}>
+        <Col sm ={3}>
           <BiUndo size = {50} color={"black"} />
         </Col>
-        <Col sm ={1}>
+        <Col sm ={3}>
           <BiRedo size = {50} color={"black"} />
+        </Col>
+        <Col sm ={3}>
+          <FaArrowLeft size = {40} className ={previousSibling === undefined ? "prev_sibling_arrow_disabled" : "prev_sibling_arrow"} onClick ={()=>{
+            handleSiblingNavigation("prev");
+          }}/>
+        </Col>
+        <Col sm ={3}>
+        <FaArrowRight size = {40} className ={nextSibling === undefined ? "prev_sibling_arrow_disabled" : "prev_sibling_arrow"} onClick ={() =>{
+           handleSiblingNavigation("next");
+        }}/>
         </Col>
       </Row>
       
       <Row>
         <Col>
-          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id = {map_id} parentRegion ={parentRegion} isMap ={isMap}/>
+          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} parentRegion ={parentRegion} isMap ={isMap} history ={props.history} parentRegion_refetch ={parentRegion_refetch} previous_paths_refetch ={previous_paths_refetch} map_id ={mapId}/>
         </Col>
         <Col>
-          <RegionalLandmarks region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id = {map_id}/>
+          <RegionalLandmarks region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id ={mapId}/>
         </Col>
       </Row>
     </Container>

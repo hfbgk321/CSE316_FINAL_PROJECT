@@ -1,8 +1,7 @@
-import react,{useState} from 'react';
-import {Navbar} from '../Navbar/Navbar';
+
 import globeImg from '../../images/globe.jpg';
 import {Container,Row,Col,Image} from 'react-bootstrap';
-import context from 'react-bootstrap/esm/AccordionContext';
+
 import "./WelcomeScreen.css";
 
 const WelcomeScreen =(props) =>{

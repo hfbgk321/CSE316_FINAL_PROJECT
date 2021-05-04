@@ -2,7 +2,7 @@ import './App.css';
 import {useQuery} from '@apollo/client';
 import * as queries from './cache/queries';
 import {jsTPS} from './utils/jsTPS';
-import { BrowserRouter, Switch, Route, Redirect,useHistory } from 'react-router-dom';
+import {Switch, Route, Redirect,useHistory } from 'react-router-dom';
 import WelcomeScreen from "./components/WelcomeScreen/WelcomeScreen";
 import {YourMaps} from './components/yourmaps/YourMaps';
 import {PrivateRoute} from './PrivateRoutes/PrivateRoute';
@@ -16,7 +16,7 @@ import {UpdateAccount} from './components/Modals/UpdateAccount/UpdateAccount';
 import {NavbarComponent} from './components/Navbar/Navbar';
 import {RegionSpreadSheet} from './components/SpreadSheet/RegionSpreadSheet';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import {Container,Row ,Col} from 'react-bootstrap';
+import {Container} from 'react-bootstrap';
 
 import {RegionViewerMain} from './components/RegionViewer/RegionViewerMain';
 
@@ -90,9 +90,8 @@ export const App = () => {
         <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {transactionstack}/>
         <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id/:region_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {transactionstack}/>
 
-        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:map_id/:region_id/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} handleSetPaths ={handleSetPaths}/>
 
-        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:map_id/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} handleSetPaths ={handleSetPaths}/>
+        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:region_id/region/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} handleSetPaths ={handleSetPaths}/>
 
       </Switch>
       </Container>

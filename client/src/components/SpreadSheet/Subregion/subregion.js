@@ -1,7 +1,5 @@
-import react,{useState,useEffect} from 'react';
-import { useDebugValue } from 'react';
+import {useState,useEffect} from 'react';
 import {Button,Row,Col,Form} from 'react-bootstrap';
-import {Link,useParams} from 'react-router-dom';
 import {DeleteRegion} from '../../Modals/DeleteRegion/DeleteRegion';
 import './Subregion.css';
 
@@ -84,7 +82,8 @@ export const Subregion = (props) =>{
       landmarks: props.landmarks,
       parent_id: props.parent_id,
       isParentAMap: props.isParentAMap,
-      children:props.children
+      children:props.children,
+      map:props.map
     }
     await props.AddOrDeleteSubregion(props.pos,props._id,region,0);
     toggleDeleteRegion(false);
@@ -118,8 +117,7 @@ export const Subregion = (props) =>{
   }
 
   const handleClickLandmarks =() =>{
-    let path = manipulateUrl();
-    window.location = `${path}/viewer`;
+    window.location = `/your_maps/${props._id}/region/viewer`;
   }
 
 

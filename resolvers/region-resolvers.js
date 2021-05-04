@@ -11,18 +11,12 @@ module.exports ={
       let isMap = await Map.findById({_id:parent_id});  
       let arr = [];
       if(isMap){
-        console.log(isMap);
-        console.log("parent is a map");
         for(let x = 0; x < isMap.children.length;x++){
           let region = await Region.findById({_id:isMap.children[x]});
           arr.push(region);
         }
-        console.log(arr);
         return arr;
       }
-
-      // console.log("parent is not a map");
-
       let found = await Region.findById({_id: parent_id });
       if(found){
         for(let x = 0; x < found.children.length;x++){
@@ -47,11 +41,24 @@ module.exports ={
       let arr = [];
       await previousPaths(_id,arr);
       return arr;
+    },
+    getAllRegionsExceptCurrent: async (_,args,{req}) =>{
+      let {_id} = args;
+      let maps = await Map.find({ownerId:new ObjectId(req.userId)});
+      let arr = [];
+
+      for(let x =0; x< maps.length;x++){
+        let current_map = maps[x];
+        for(let y = 0; y < current_map.children.length;y++){
+          await allRegionsExceptThis(current_map.children[y],_id,arr);
+        }
+      }
+      return arr;
     }
-  },
+  }, 
+  
   Mutation:{
     addSubregion: async (_,args,{res}) => {
-      console.log("is not a map");
       let {pos,subregion,arr} = args;
       if(subregion._id.length == 0){
         let _id = new ObjectId();
@@ -81,20 +88,14 @@ module.exports ={
       }
       
 
-      let updated = await Region.findByIdAndUpdate({_id:parent_id},{children:[...temp_arr]});
+      await Region.findByIdAndUpdate({_id:parent_id},{children:[...temp_arr]});
       let saved = await region.save();
-      console.log(saved);
       return saved;
     },
 
     addSubregionToMap: async (_,args,{res}) =>{
-      
-      console.log("ismap");
       let {pos,subregion,arr} = args;
       let isNewSubregion = subregion._id.length > 0;
-      console.log("------------------arr");
-      console.log(arr);
-      console.log("------------------arr");
       if(arr.length > 0){
         await remakeComponents(arr);
       }
@@ -124,12 +125,7 @@ module.exports ={
           }
         }
       }
-      console.log("----------------------------------------");
-      console.log(children_arr);
-      console.log(temp_arr);
-      console.log("----------------------------------------");
-
-      let updated = await Map.findByIdAndUpdate({_id:parent_id},{children:[...temp_arr]},{new:true});
+      await Map.findByIdAndUpdate({_id:parent_id},{children:[...temp_arr]},{new:true});
       let saved = await region.save();
       console.log(saved);
       return saved;
@@ -201,9 +197,63 @@ module.exports ={
         return updated;
       }
       return {};
+    },
+    changeParent: async (_,args,{res}) =>{
+      //_id:String,old_parent:String,new_parent:String
+      /**
+         * Find the region who wants to change its parent
+         * Find the current parent of that region.
+         * delete the region's _id from the current parent's children 
+         * change the parent_id of the region to the new parent id
+         * 
+         * find the new parent of the region.
+         * add the current region's _id to the new parent's children's property
+         * 
+       */
+      //name: layer1 - c _id: 608e15874b2350110cba6407
+      //old_parent: 608e0989397a79287cc55ff7
+      //new_parent: 608e0b97397a79287cc55fff -> layer 1
+      let {_id,old_parent_id,new_parent_id} = args;
+      console.log("_id: "+_id);
+      console.log("old_parent: "+old_parent_id);
+      console.log("new_parent: "+new_parent_id);
+      let current_region = await Region.findById({_id:_id});
 
+      console.log("current_region: " );
+      console.log(current_region);
+
+      let current_parent = current_region.isParentAMap ? await Map.findById({_id:old_parent_id}): await Region.findById({_id:old_parent_id});
+      
+      console.log("current_parent: " );
+      console.log(current_parent);
+
+      current_parent.children = deleteChildrenFromArray(_id,current_parent.children);
       
 
+      let new_parent = await Region.findById({_id:new_parent_id});
+      let isMap = false;
+      if(!new_parent){
+        new_parent = await Map.findById({_id:new_parent_id});
+        isMap = true;
+      }
+
+      current_region.parent_id = new_parent_id;
+      current_region.isParentAMap = isMap;
+      console.log("updated current region");
+      console.log(current_region);
+
+      if(old_parent_id!==new_parent_id){
+        new_parent.children.push(_id);
+      }
+      
+      console.log("new parent");
+      console.log(new_parent);
+
+      await new_parent.save();
+      await current_region.save();
+      await current_parent.save();
+      
+      return current_region;
     }
   }
 }
@@ -248,9 +298,6 @@ const previousPaths = async (_id,arr) =>{
 const getChildrenComponents = async (_id,arr) =>{
   let region = await Region.findById({_id:_id});
   arr.push(region);
-  // console.log("---------------------getdchild");
-  // console.log(arr);
-  // console.log("---------------------getdchild");
   for(let x = 0; x< region.children.length;x++){
     await getChildrenComponents(region.children[x],arr);
   }
@@ -264,7 +311,21 @@ const remakeComponents = async (arr) =>{
   }
 }
 
-// console.log(getChildrenComponents())
+const allRegionsExceptThis = async (starting_id,excluded_id,arr) =>{
+  if(starting_id === excluded_id){
+    return;
+  }else{
+    let current_region = await Region.findById({_id:starting_id});
+    arr.push(current_region);
+    for(let x = 0; x< current_region.children.length;x++){
+      await allRegionsExceptThis(current_region.children[x],excluded_id,arr);
+    }
+    return;
+  }
+}
+
+
+
 
 
 

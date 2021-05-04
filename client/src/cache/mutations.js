@@ -62,6 +62,8 @@ export const ADD_NEW_REGION = gql`
       flag
       landmarks
       parent_id
+      isParentAMap
+      map
     }
   }
 `;
@@ -77,6 +79,8 @@ export const ADD_NEW_REGION_TO_MAP = gql`
       flag
       landmarks
       parent_id
+      isParentAMap
+      map
     }
   }
 `;
@@ -99,6 +103,7 @@ export const DELETE_SUBREGION = gql`
     	landmarks
     	parent_id
 			isParentAMap
+      map
     }
   }
 `;
@@ -114,6 +119,8 @@ export const UPDATE_SUBREGION_FIELD = gql`
       flag
       landmarks
       parent_id
+      isParentAMap
+      map
     }
   }
 `;
@@ -153,6 +160,8 @@ export const UPDATE_REGION_CHILDREN = gql`
       flag
       landmarks
       parent_id
+      isParentAMap
+      map
     }
   }
 `;
@@ -168,6 +177,8 @@ export const ADD_LANDMARK_TO_REGION = gql`
       flag
       landmarks
       parent_id
+      isParentAMap
+      map
     }
   }
 `;
@@ -183,9 +194,31 @@ export const CHANGE_LANDMARK_AT_POS = gql`
       flag
       landmarks
       parent_id
+      isParentAMap
+      map
     }
   }
 
 `;
+
+export const CHANGE_PARENT = gql`
+  mutation ChangeParent($_id:String,$old_parent_id:String,$new_parent_id:String){
+    changeParent(_id:$_id,old_parent_id:$old_parent_id,new_parent_id:$new_parent_id){
+      _id
+		  children
+      name
+      capital
+      leader
+      flag
+      landmarks
+      parent_id
+      isParentAMap
+      map
+    }
+  }
+`;
+
+
+
 
 

@@ -1,16 +1,15 @@
-import react,{useState,useEffect} from 'react';
+import {useState,useEffect} from 'react';
 import {Table,Container,Row,Col,Button} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 import {useQuery,useMutation} from "@apollo/client";
 import * as queries from '../../cache/queries';
 import {ADD_NEW_REGION,ADD_NEW_REGION_TO_MAP,DELETE_SUBREGION,UPDATE_SUBREGION_FIELD,UPDATE_MAP_CHILDREN,UPDATE_REGION_CHILDREN} from '../../cache/mutations';
 import {Subregion} from './Subregion/subregion';
-import { set } from 'mongoose';
 import {EditItem_Transaction,UpdateRegionItems_Transaction,SortRegionItems_Transaction} from '../../utils/jsTPS';
 import './RegionSpreadSheet.css';
 import {GrAddCircle} from 'react-icons/gr';
 import {BiUndo,BiRedo} from 'react-icons/bi';
-import {BallSpinLoader,LineScalePulseOutRapid	} from 'react-pure-loaders';
+import {LineScalePulseOutRapid	} from 'react-pure-loaders';
 
 export const RegionSpreadSheet =(props)=>{
   let {map_id,region_id} = useParams();
@@ -30,7 +29,8 @@ export const RegionSpreadSheet =(props)=>{
     landmarks: [],
     parent_id: parent_id,
     isParentAMap: region_id === undefined ? true : false,
-    children:[]
+    children:[],
+    map:map_id
   });
   const [previousPaths,setPreviousPaths] = useState([]);
 
@@ -244,12 +244,10 @@ export const RegionSpreadSheet =(props)=>{
             
             {subregion_loading? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
               return(
-                <Subregion pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children}/>
+                <Subregion pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children} map ={map_id}/>
               )
             })}
-            
-            
-            
+
           </tbody>
           
         </Table>

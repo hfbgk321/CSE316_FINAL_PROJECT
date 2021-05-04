@@ -37,6 +37,10 @@ const regionSchema = new Schema(
     isParentAMap:{
       type:Boolean,
       required:true
+    },
+    map:{
+      type:String,
+      required:true
     }
 	
 	},

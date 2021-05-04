@@ -1,7 +1,5 @@
 import react,{useState,useEffect} from 'react';
-import { Redirect } from 'react-router';
 import {Container,Button,Row,Col,ListGroup} from 'react-bootstrap';
-import globe from '../../images/globe.jpg';
 import fun_gif from '../../images/tenor.gif'
 import "./YourMaps.css";
 import * as queries from '../../cache/queries';
@@ -10,7 +8,7 @@ import {DELETE_MAP,UPDATE_MAP_NAME} from '../../cache/mutations';
 import {CreateMap} from '../Modals/CreateMap/CreateMap';
 
 import {MapItem} from '../yourmaps/MapItem/MapItem';
-import { BallBeat,LineScalePulseOutRapid } from 'react-pure-loaders';
+import {LineScalePulseOutRapid } from 'react-pure-loaders';
 
 
 export const YourMaps =(props) =>{

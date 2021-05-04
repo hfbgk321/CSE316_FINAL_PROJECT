@@ -11,12 +11,14 @@ const typeDefs = gql `
     landmarks:[String]
     parent_id:String
 		isParentAMap: Boolean
+		map:String
 	}
 	extend type Query {
     getRegionById(_id:String): Region
     getRegionsByParentId(parent_id:String!): [Region]
     getAllRegions:[Region!]
 		getRegionPaths(_id:String):[PathInfo]
+		getAllRegionsExceptCurrent(_id:String):[Region]
 	}
 	extend type Mutation {
     addSubregion(pos:Int,subregion: RegionInput,arr:[RegionInput]): Region
@@ -27,6 +29,7 @@ const typeDefs = gql `
 		updateRegionChildren(_id:String, children: [String]): Region
 		addLandmarkToRegion(_id:String, landmark:String): Region
 		changeLandmarkAtPos(_id:String,new_landmark:String,pos:Int): Region
+		changeParent(_id:String,old_parent_id:String,new_parent_id:String) : Region
 	},
   input RegionInput {
 	_id: String
@@ -38,6 +41,7 @@ const typeDefs = gql `
 	landmarks: [String]
 	parent_id: String
 	isParentAMap: Boolean
+	map:String
 },
 type PathInfo {
 	_id:String

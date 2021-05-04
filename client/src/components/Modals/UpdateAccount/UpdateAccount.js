@@ -6,7 +6,13 @@ import {UPDATE} from '../../../cache/mutations';
 
 export const UpdateAccount = (props) =>{
 
-  const [input, setInput] = useState({ email: props.user=== null ? "": props.user.email,current_password:"", new_password: '', name:props.user === null ? "" : props.user.name});
+  const [input, setInput] = useState(
+    { 
+      email: props.user=== null ? "": props.user.email,
+      current_password:"",
+      new_password: '',
+      name:props.user === null ? "" : props.user.name
+    });
   const [name,setName] = useState(props.user === null ? "": props.user.name);
   const [email,setEmail] = useState(props.user === null ? "": props.user.email);
 	const [loading, toggleLoading] = useState(false);
