@@ -7,13 +7,16 @@ import {BsPencil} from 'react-icons/bs';
 import {ChangeParent} from '../../Modals/ChangeParent/ChangeParent';
 import {useQuery,useMutation} from '@apollo/client';
 import {GET_ALL_REGIONS_EXCEPT_CURRENT,GET_ALL_MAPS} from '../../../cache/queries';
-
+import {CHANGE_PARENT} from '../../../cache/mutations';
+import {EditParents_Transaction} from '../../../utils/jsTPS';
 
 
 export const RegionalInfo = (props) =>{
   const [showChangeParent,toggleChangeParent] = useState(false);
   const [potentialParentsRegions,setPotentialParentsRegions] = useState([]);
   const [potentialParentsMaps,setPotentialParentsMaps] = useState([]);
+  const [ChangingParent] = useMutation(CHANGE_PARENT);
+
   console.log(props.region_id);
   const {loading:exclude_current_loading,error:exclude_current_error,data:exclude_current_data,refetch:exclude_current_refetch} = useQuery(GET_ALL_REGIONS_EXCEPT_CURRENT,{
     variables:{
@@ -64,6 +67,21 @@ export const RegionalInfo = (props) =>{
 
   const setChangeParent = () =>{
     toggleChangeParent(!showChangeParent);
+  }
+
+  //_id, newParent,oldParent,callback
+
+  const handleChangeParents = async (_id, newParent,oldParent) =>{
+    console.log("old "+oldParent);
+    console.log("new "+newParent);
+    console.log("_id "+_id);
+      let transaction = new EditParents_Transaction(_id,newParent,oldParent,ChangingParent);
+      props.tps.addTransaction(transaction);
+      await props.tpsRedo();
+      await props.parentRegion_refetch();
+      await props.previous_paths_refetch();
+      await exclude_current_refetch();
+      await all_maps_refetch();
   }
 
   if(!props.isInit) {
@@ -118,7 +136,7 @@ export const RegionalInfo = (props) =>{
         </Col>
       </Row>
       </div>
-      <ChangeParent setChangeParent ={setChangeParent} showChangeParent ={showChangeParent} loading ={exclude_current_loading || all_maps_loading} potentialParents ={[...potentialParentsMaps,...potentialParentsRegions]} parentRegion ={props.parentRegion} history ={props.history} region = {props.region} region_refetch ={props.region_refetch} subregions_refetch ={props.subregions_refetch} parentRegion_refetch ={props.parentRegion_refetch} previous_paths_refetch ={props.previous_paths_refetch} exclude_current_refetch = {exclude_current_refetch} all_maps_refetch ={all_maps_refetch} />
+      <ChangeParent setChangeParent ={setChangeParent} showChangeParent ={showChangeParent} loading ={exclude_current_loading || all_maps_loading} potentialParents ={[...potentialParentsMaps,...potentialParentsRegions]} parentRegion ={props.parentRegion} history ={props.history} region = {props.region} region_refetch ={props.region_refetch} subregions_refetch ={props.subregions_refetch} parentRegion_refetch ={props.parentRegion_refetch} previous_paths_refetch ={props.previous_paths_refetch} exclude_current_refetch = {exclude_current_refetch} all_maps_refetch ={all_maps_refetch} handleChangeParents ={handleChangeParents} />
       
     </Container>
   )

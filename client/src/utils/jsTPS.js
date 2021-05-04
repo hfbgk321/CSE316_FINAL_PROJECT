@@ -191,7 +191,6 @@ export class UpdateLandmarks_Transaction extends jsTPS_Transaction{
 
 
     async doTransaction(){
-        debugger;
         let {data} = await this.updateFunction({
             variables:{
                 _id:this._id,
@@ -235,6 +234,7 @@ export class EditParents_Transaction extends jsTPS_Transaction{
 
 
     async undoTransaction(){
+        debugger;
         let {data} = await this.updateFunction({variables:{
             _id:this._id,
             old_parent_id:this.newParent,
@@ -279,6 +279,7 @@ export class EditItem_Transaction extends jsTPS_Transaction {
 
 export class jsTPS {
   constructor() {
+      console.log("reconstructed............................................");
       // THE TRANSACTION STACK
       this.transactions = [];
       // KEEPS TRACK OF WHERE WE ARE IN THE STACK, THUS AFFECTING WHAT
@@ -416,6 +417,7 @@ export class jsTPS {
    */
   clearAllTransactions() {
       // REMOVE ALL THE TRANSACTIONS
+      console.log("JKANKFADNKOFAKLJFLKADJFDAKJLADJLDSAJLK clear");
       this.transactions = [];
       
       // MAKE SURE TO RESET THE LOCATION OF THE

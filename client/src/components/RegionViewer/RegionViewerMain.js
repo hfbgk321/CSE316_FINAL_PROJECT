@@ -167,8 +167,9 @@ export const RegionViewerMain = (props) => {
   }
 
   const tpsUndo =async () =>{
-      console.log("undo");
+      console.log("attempting undo...")
       if(props.tps.hasTransactionToUndo()){
+        console.log("undo");
         await props.tps.undoTransaction();
         await region_refetch();
         await subregions_refetch();
@@ -177,11 +178,12 @@ export const RegionViewerMain = (props) => {
         setHasUndo(props.tps.hasTransactionToUndo());
         setHasRedo(props.tps.hasTransactionToRedo());
       }
+
   }
 
   const tpsRedo = async() =>{
-    console.log("redo");
     if(props.tps.hasTransactionToRedo()){
+      console.log("redo");
       await props.tps.doTransaction();
       await region_refetch();
       await subregions_refetch();
@@ -222,7 +224,7 @@ export const RegionViewerMain = (props) => {
       
       <Row>
         <Col>
-          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} parentRegion ={parentRegion} isMap ={isMap} history ={props.history} parentRegion_refetch ={parentRegion_refetch} previous_paths_refetch ={previous_paths_refetch} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo}/>
+          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} parentRegion ={parentRegion} isMap ={isMap} history ={props.history} parentRegion_refetch ={parentRegion_refetch} previous_paths_refetch ={previous_paths_refetch} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps}/>
         </Col>
         <Col>
           <RegionalLandmarks region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps}/>

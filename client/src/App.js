@@ -20,14 +20,14 @@ import {Container} from 'react-bootstrap';
 
 import {RegionViewerMain} from './components/RegionViewer/RegionViewerMain';
 
-export const App = () => {
+export const App = (props) => {
   let history = useHistory();
   const[showCreate,toggleShowCreate] = useState(false);
   const[showLogin, toggleShowLogin] = useState(false);
   const[showUpdate,toggleShowUpdate] = useState(false);
   const[user,setUser] = useState(null);
   const [isInit,setIsInit] = useState(false);
-  let transactionstack = new jsTPS();
+  
   const [prevPaths,setPrevPaths] = useState([]);
   const {loading, error, data, refetch} = useQuery(queries.GET_DB_USER);
 
@@ -77,7 +77,7 @@ export const App = () => {
   }
   return (
       <Container fluid>
-      <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} prevPaths = {prevPaths} setShowLogin ={setShowLogin} setShowUpdate ={setShowUpdate} fetchUser={refetch} user ={user} history={history} isInit ={isInit} tps ={transactionstack}/>
+      <NavbarComponent auth = {user !== null} setShowCreate ={setShowCreate} prevPaths = {prevPaths} setShowLogin ={setShowLogin} setShowUpdate ={setShowUpdate} fetchUser={refetch} user ={user} history={history} isInit ={isInit} tps ={props.transactionstack}/>
         <LoginBootStrap showLogin ={showLogin} setShowLogin ={setShowLogin} fetchUser ={refetch} history={history}/>
         <CreateAccountBootstrap showCreate ={showCreate} setShowCreate ={setShowCreate} fetchUser ={refetch} history={history} setShowLogin={setShowLogin}/>
         <UpdateAccount showUpdate ={showUpdate} setShowUpdate ={setShowUpdate} fetchUser ={refetch} user ={user} isInit ={isInit} history={history}/>
@@ -87,11 +87,11 @@ export const App = () => {
 
         <PrivateRoute user = {user}  fetchUser ={refetch} exact path="/your_maps" isInit ={isInit} component ={YourMaps} history={history}/>
 
-        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {transactionstack}/>
-        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id/:region_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {transactionstack}/>
+        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {props.transactionstack}/>
+        <PrivateRoute user ={user} fetchUser ={refetch} exact path= "/your_maps/:map_id/:region_id" isInit ={isInit} component ={RegionSpreadSheet} history={history} handleSetPaths ={handleSetPaths} tps = {props.transactionstack}/>
 
 
-        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:region_id/region/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {transactionstack} handleSetPaths ={handleSetPaths}/>
+        <PrivateRoute user= {user} fetchUser ={refetch} exact path ="/your_maps/:region_id/region/viewer" isInit ={isInit} component ={RegionViewerMain} history ={history} tps = {props.transactionstack} handleSetPaths ={handleSetPaths}/>
 
       </Switch>
       </Container>

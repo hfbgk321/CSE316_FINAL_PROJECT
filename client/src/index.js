@@ -4,6 +4,8 @@ import './index.css';
 import {App} from './App';
 import { ApolloProvider, ApolloClient, InMemoryCache } from '@apollo/client';
 import {BrowserRouter} from 'react-router-dom'
+import {jsTPS} from './utils/jsTPS';
+let transactionstack = new jsTPS();
 const cache = new InMemoryCache({
 
 	/*
@@ -28,7 +30,7 @@ ReactDOM.render(
   <React.StrictMode>
 		<BrowserRouter>
 		<ApolloProvider client ={client}>
-			<App />
+			<App transactionstack ={transactionstack}/>
 		</ApolloProvider>
 		</BrowserRouter>
    
