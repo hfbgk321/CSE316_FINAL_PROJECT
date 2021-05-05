@@ -11,11 +11,32 @@ import {CHANGE_PARENT} from '../../../cache/mutations';
 import {EditParents_Transaction} from '../../../utils/jsTPS';
 
 
+//previousPaths
 export const RegionalInfo = (props) =>{
   const [showChangeParent,toggleChangeParent] = useState(false);
   const [potentialParentsRegions,setPotentialParentsRegions] = useState([]);
   const [potentialParentsMaps,setPotentialParentsMaps] = useState([]);
   const [ChangingParent] = useMutation(CHANGE_PARENT);
+
+  const getImagePath = () =>{
+    let paths = props.previousPaths;
+    console.log("in prop change");
+    let src = "images";
+    for(let x = 0; x< paths.length;x++){
+      src+=`/${paths[x].name}`;
+    }
+    src+=`/${props.region.name} Flag.png`;
+    console.log(src);
+    try{
+      let temp = require(`../../../${src}`).default;
+      console.log(temp);
+      return src;
+    }catch(error){
+      console.log(error);
+      return 'images/mclovin.jpg';
+    }
+  }
+  getImagePath();
 
   console.log(props.region_id);
   const {loading:exclude_current_loading,error:exclude_current_error,data:exclude_current_data,refetch:exclude_current_refetch} = useQuery(GET_ALL_REGIONS_EXCEPT_CURRENT,{
@@ -90,7 +111,7 @@ export const RegionalInfo = (props) =>{
   return (
     <Container className ="viewer_container">
       <Row>
-        <Image src ={globe} className ="viewer_img"/>
+        <img src ={require(`../../../${getImagePath()}`).default} className ="viewer_img"/>
       </Row>
       <div className ="viewer_info">
       <Row>

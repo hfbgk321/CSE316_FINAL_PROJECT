@@ -15,11 +15,12 @@ export const RegionSpreadSheet =(props)=>{
   let {map_id,region_id} = useParams();
   const [parent_id,setParentId] = useState(region_id === undefined ? map_id : region_id);
   const [isMap,setIsMap] = useState(region_id === undefined ? true : false);
-  //console.log(parent_id);
   const [mapInfo,setMapInfo] = useState({});
   const [subregions,setSubregions] = useState([]);
   const [hasUndo,setHasUndo] = useState(false);
   const [hasRedo,setHasRedo] = useState(false);
+  const [focusPos,setFocusPos] = useState(0);
+
   const [input,setInput] = useState({
     	_id: "",
     name: "None",
@@ -213,9 +214,40 @@ export const RegionSpreadSheet =(props)=>{
     }
 	}
 
+  useEffect(() =>{
+		const onKeyDown = async (event) => {
+      if(subregions.length > 0){
+        if(event.keyCode == 38){
+					if(focusPos == 0){
+            setFocusPos(subregions.length-1);
+          }else{
+            setFocusPos(focusPos-1);
+          }
+          console.log(focusPos);
+				}
+
+				if(event.keyCode == 40){
+						if(focusPos == subregions.length-1){
+              setFocusPos(0);
+            }else{
+              setFocusPos(focusPos+1);
+            }
+            console.log(focusPos);
+				}
+      }
+				
+		}
+		document.addEventListener('keydown', onKeyDown);
+        
+        return () => {
+            document.removeEventListener('keydown', onKeyDown);
+        }
+
+	},[subregions,focusPos]);
+
   
   return (
-    <Container className = "spreadsheet_container">
+    <Container className = "spreadsheet_container" >
       <Row className ="button_row">
           <Col sm ={1}><GrAddCircle className ="add_button" size={50}  onClick ={() =>{AddOrDeleteSubregion(subregions.length,"",{...input},1)}} /></Col>
           <Col sm ={1}><BiUndo className ={hasUndo?"undo_button" :"button_diabled"} size={50} onClick ={tpsUndo} color ={hasUndo ? "black" : "grey"} /></Col>
@@ -244,7 +276,7 @@ export const RegionSpreadSheet =(props)=>{
             
             {subregion_loading? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
               return(
-                <Subregion pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children} map ={map_id}/>
+                <Subregion region_name ={mapInfo.name}pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children} map ={map_id} focusPos ={focusPos} previousPaths ={previousPaths}/>
               )
             })}
 

@@ -1,3 +1,15 @@
 .landmark_td:hover {
   cursor: pointer;
 }
+.selected_region {
+  background-color: grey !important;
+}
+
+.unselected_region {
+  background-color: white;
+}
+
+.flag_img {
+  width: 5rem;
+  height: auto;
+}

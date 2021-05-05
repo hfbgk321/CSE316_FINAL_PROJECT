@@ -1,18 +1,43 @@
 import {useState,useEffect} from 'react';
-import {Button,Row,Col,Form} from 'react-bootstrap';
+import {Button,Row,Col,Form,Image} from 'react-bootstrap';
 import {DeleteRegion} from '../../Modals/DeleteRegion/DeleteRegion';
 import './Subregion.css';
+import mclovin from '../../../images/mclovin.jpg'
+import algeria from '../../../images/The World/Africa/Algeria Flag.png';
+import { assertScalarType, assertSchema } from 'graphql';
 
 
 
 
 export const Subregion = (props) =>{
 
+
   const [editName,toggleEditName] = useState(false);
   const [editCapital, toggleEditCapital] = useState(false);
   const [editLeader,toggleEditLeader] = useState(false);
   const [editFlag,toggleEditFlag] = useState(false);
   const [showDeleteRegion,toggleDeleteRegion] = useState(false);
+  const [mapPath,setMapPath] = useState('images/The World/Africa/Algeria Flag.png');
+
+  const getImagePath = () =>{
+    let paths = props.previousPaths;
+    console.log("in prop change");
+    let src = "images";
+    for(let x = 0; x< paths.length;x++){
+      src+=`/${paths[x].name}`;
+    }
+    src+=`/${props.region_name}/${props.name} Flag.png`;
+    console.log(src);
+    try{
+      let temp = require(`../../../${src}`).default;
+      console.log(temp);
+      return src;
+    }catch(error){
+      console.log(error);
+      return 'images/mclovin.jpg';
+    }
+  }
+  
 
   let click = false;
   let timer = 0;
@@ -30,7 +55,6 @@ export const Subregion = (props) =>{
     clearTimeout(timer);
     click = true;
     handleNavigate();
-    
   }
 
   const setShowDeleteRegion = () =>{
@@ -119,11 +143,14 @@ export const Subregion = (props) =>{
   const handleClickLandmarks =() =>{
     window.location = `/your_maps/${props._id}/region/viewer`;
   }
+  const handleDefaultSrc =(ev) =>{
+    ev.target.src = mclovin;
+  }
 
 
   return (
     <>
-    <tr id = {props._id}>
+    <tr id = {props._id} className ={props.pos == props.focusPos ? "selected_region":"unselected_region" }>
       <td>
         <Row>
           <Col><Button variant ="danger" onClick ={setShowDeleteRegion}>Delete</Button></Col>
@@ -165,16 +192,9 @@ export const Subregion = (props) =>{
         )
       }
 
-      {
-        !editFlag ? <td onClick = {() =>{toggleEditFlag(!editFlag)}}>{props.flag}</td> : (
-          <td>
-            <Form>
-            <Form.Control type="text" placeholder="Enter your new flag" onBlur ={handleEditFlag} autoFocus={true} name = "flag"/>
-          </Form>
-          </td>
-          
-        )
-      }
+      <td>
+        <img  className="flag_img" src={require(`../../../${getImagePath()}`).default}/>
+      </td>
 
       <td onClick ={handleClickLandmarks} className ="landmark_td">{props.landmarks[0]+","+props.landmarks[1]+" ....."}</td>
   </tr>

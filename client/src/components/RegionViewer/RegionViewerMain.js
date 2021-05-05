@@ -26,6 +26,7 @@ export const RegionViewerMain = (props) => {
   const [nextSibling,setNextSibling] = useState("");
   const [hasUndo,setHasUndo] = useState(false);
   const [hasRedo,setHasRedo] = useState(false);
+  const [previousPaths,setPreviousPaths] = useState([]);
 
   const {loading:region_loading,error:region_error,data:region_data,refetch:region_refetch} = useQuery(GET_REGION_BY_ID,{variables:{_id:region_id}});
 
@@ -154,6 +155,7 @@ export const RegionViewerMain = (props) => {
       let {getRegionPaths} = previous_paths_data;
       if(getRegionPaths!==null){
         props.handleSetPaths(getRegionPaths);
+        setPreviousPaths(getRegionPaths);
       }
     }
   },[previous_paths_data]);
@@ -224,7 +226,7 @@ export const RegionViewerMain = (props) => {
       
       <Row>
         <Col>
-          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} parentRegion ={parentRegion} isMap ={isMap} history ={props.history} parentRegion_refetch ={parentRegion_refetch} previous_paths_refetch ={previous_paths_refetch} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps}/>
+          <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} parentRegion ={parentRegion} isMap ={isMap} history ={props.history} parentRegion_refetch ={parentRegion_refetch} previous_paths_refetch ={previous_paths_refetch} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps} previousPaths ={previousPaths}/>
         </Col>
         <Col>
           <RegionalLandmarks region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps}/>

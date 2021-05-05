@@ -234,7 +234,6 @@ export class EditParents_Transaction extends jsTPS_Transaction{
 
 
     async undoTransaction(){
-        debugger;
         let {data} = await this.updateFunction({variables:{
             _id:this._id,
             old_parent_id:this.newParent,
