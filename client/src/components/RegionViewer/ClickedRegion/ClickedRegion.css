@@ -1,6 +1,13 @@
-.alert {
-  width: 25rem;
+.alert_clicked {
+  width: 20rem;
   position: relative;
-  bottom: 2rem;
-  height: 7rem;
+  left: 4rem;
+  top: 1rem;
+}
+
+.clicked_region_input {
+  height: 4rem;
+  width: 31.5rem;
+  position: relative;
+  font-size: 1rem;
 }

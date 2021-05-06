@@ -1,5 +1,5 @@
 import react,{useState,useEffect,useRef} from 'react';
-import {Button,Container,Row,Col,Form,Alert} from 'react-bootstrap';
+import {Button,Container,Row,Col,Form,Alert,ListGroup} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 
 import {ClickedRegion} from '../ClickedRegion/ClickedRegion';
@@ -80,25 +80,24 @@ export const RegionalLandmarks = (props) =>{
     <Container className = "regional_landmarks_container">
       <Row>
         <Col>
-          <ul className ="region_landmarks_list">
-            <div className ="region_landmarks_inner_div">
-            {props.siblings.map((sibling,key) =>{
-              return (
-                <li className ="regional_landmarks_list_item">
-                  {sibling._id === props.region._id ? sibling.landmarks.map((landmark,key)=>{
-                    return <ClickedRegion landmark ={landmark} key = {key} _id ={sibling._id} pos ={key} handleChangeLandmark ={handleChangeLandmark} tpsRedo ={props.tpsRedo} tpsUndo ={props.tpsUndo} handleAddDeleteLandmark={handleAddDeleteLandmark} />
-                  }): sibling.landmarks.map((landmark,key)=>{
-                    return <h1 key ={key}>{landmark}</h1>
-                  }) }
-                </li>
-              )
-            })}
-            </div>
-            
-          </ul>
+        <ListGroup as ="ul" className ="region_landmarks_list">
+       
+              {props.siblings.map((sibling,key) =>{
+                return <>
+                    {sibling._id === props.region._id ? sibling.landmarks.map((landmark,key)=>{
+                      return <ClickedRegion landmark ={landmark} key = {key} _id ={sibling._id} pos ={key} handleChangeLandmark ={handleChangeLandmark} tpsRedo ={props.tpsRedo} tpsUndo ={props.tpsUndo} handleAddDeleteLandmark={handleAddDeleteLandmark} />
+                    }): sibling.landmarks.map((landmark,key)=>{
+                      return <ListGroup.Item as ="li" key ={key}>{landmark}</ListGroup.Item>
+                    }) }
+                    </>
+              })}
+              
+
+        </ListGroup>
+         
         </Col>
       </Row>
-      <Row>
+      <Row className ="add_landmark">
         <Col>
         <Form ref ={formRef}>
           <Form.Control type="text" placeholder="Enter your new landmark name" onChange ={changeLandmark}  name = "name"/>
@@ -110,7 +109,7 @@ export const RegionalLandmarks = (props) =>{
       </Row>
       <Row>
       {
-      showError && <Alert show ={true} variant="warning" className ="alert"><p>
+      showError && <Alert show ={true} variant="warning" className ="warning_stuff"><p>
       Unable To Add New Landmark. A landmark with this name already exists
     </p><div className="d-flex justify-content-end">
       <Button onClick = {() => setShowError(false)} variant="outline-warning">
@@ -120,7 +119,7 @@ export const RegionalLandmarks = (props) =>{
     }
 
     {
-      showSuccess && <Alert show ={true} variant="success" className ="alert"><p>
+      showSuccess && <Alert show ={true} variant="success" className ="warning_stuff"><p>
       Successfully Added landmark
     </p><div className="d-flex justify-content-end">
       <Button onClick = {() => setShowSuccess(false)} variant="outline-success">

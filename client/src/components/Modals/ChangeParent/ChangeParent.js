@@ -14,30 +14,7 @@ export const ChangeParent =(props) =>{
     }else{
       console.log("invalid selected parent");
     }
-    // if(selectedParent.length > 0 && selectedParent !== props.parentRegion._id){
-    //   let {data} = await ChangeParent({
-    //     variables:{
-    //       _id: props.region._id,
-    //       old_parent_id:props.region.parent_id,
-    //       new_parent_id: selectedParent
-    //     }
-    //   });
-  
-    //   if(data){
-    //     let {changeParent} = data;
-    //     if(changeParent!== undefined){
-    //         await props.region_refetch();
-    //         await props.subregions_refetch();
-    //         await props.parentRegion_refetch(); 
-    //         await props.previous_paths_refetch();
-    //         await props.exclude_current_refetch();
-    //         await props.all_maps_refetch();        
-    //     }
-        
-    //   }
-    // }else{
-    //   console.log("invalid selected parent");
-    // }
+
   }
 
   //_id, newParent,oldParent,callback

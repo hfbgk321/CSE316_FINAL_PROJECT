@@ -1,5 +1,5 @@
 import react,{useState,useEffect,useRef} from 'react';
-import {Button,Container,Row,Col,Alert} from 'react-bootstrap';
+import {Button,Container,Row,Col,Alert,ListGroup} from 'react-bootstrap';
 import {Form} from 'react-bootstrap';
 import {useQuery} from "@apollo/client";
 import {DOES_LANDMARK_EXIST} from '../../../cache/queries';
@@ -35,11 +35,13 @@ export const ClickedRegion = (props) =>{
       let {doesLandmarkExist} = data;
       if(!doesLandmarkExist){
         await props.handleChangeLandmark(props._id,newLandMark,props.landmark,props.pos);
-        setNewLandmark(props.landmark);
+        editRef.current.reset();
+        setNewLandmark(newLandMark);
         handleClick();
         setShowSuccess(true);
         setShowError(false);
       }else{
+        editRef.current.reset();
         setNewLandmark(props.landmark);
         handleClick();
         setShowError(true);
@@ -53,40 +55,39 @@ export const ClickedRegion = (props) =>{
     <>
      {
       !editLandmark ? 
-      <Row>
-        <Button variant ="danger" style ={{height:40,width:"auto"}} onClick = {async ()=> await props.handleAddDeleteLandmark(props._id,props.pos,1,props.landmark,)}>X</Button>
-      <h3 onClick ={handleClick} style ={{color:"blue",marginBottom:20,marginLeft:10}}>
-      {props.landmark} 
-      </h3>
-      </Row>
+      <ListGroup.Item as ="li" onClick ={handleClick} style ={{color:"blue"}}>
+        <Row>
+          <Col> <div>{props.landmark}</div></Col>
+          <Col><Button variant ="danger" style ={{width:80,height:"auto",position:"relative",left:120}} onClick = {async ()=> await props.handleAddDeleteLandmark(props._id,props.pos,1,props.landmark,)}>Delete</Button></Col>
+        </Row>
+        
+      </ListGroup.Item>
+
        : 
       <Form ref ={editRef}>
       <Form.Control type="text" placeholder="Enter your new landmark name" value ={newLandMark} onBlur ={handleBlur} autoFocus={true} name = "name" className ="clicked_region_input" onChange ={(e)=>setNewLandmark(e.target.value)}/>
     </Form>
     }
-    <Row>
+    
     {
-      showError && <Alert show ={true} variant="warning" className ="alert"><p>
+      showError && <ListGroup.Item><Alert show ={true} variant="warning" className ="alert_clicked"><p>
       A landmark with this name already exists
     </p><div className="d-flex justify-content-end">
       <Button onClick = {() => setShowError(false)} variant="outline-warning">
         Close me y'all!
       </Button>
-    </div></Alert>
+    </div></Alert></ListGroup.Item>
     }
 
 {
-      showSuccess && <Alert show ={true} variant="success" className ="alert"><p>
+      showSuccess && <ListGroup.Item><Alert className ="alert_clicked" show ={true} variant="success" ><p>
       Successfully edited landmark
     </p><div className="d-flex justify-content-end">
       <Button onClick = {() => setShowSuccess(false)} variant="outline-success">
         Close me y'all!
       </Button>
-    </div></Alert>
+    </div></Alert></ListGroup.Item>
     }
-    </Row>
-    
-    
     </>
    
     
