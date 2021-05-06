@@ -2,6 +2,8 @@
   border-style: solid;
   height: 29rem;
   list-style-type: none;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .regional_landmarks_container {
   position: relative;
@@ -38,4 +40,11 @@
 
 .pencil:hover {
   cursor: pointer;
+}
+
+.alert {
+  width: 30rem;
+  position: relative;
+  left: 2rem;
+  margin-top: 2rem;
 }

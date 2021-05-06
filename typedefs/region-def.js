@@ -19,6 +19,7 @@ const typeDefs = gql `
     getAllRegions:[Region!]
 		getRegionPaths(_id:String):[PathInfo]
 		getAllRegionsExceptCurrent(_id:String):[Region]
+		doesLandmarkExist(_id:String,landmark:String):Boolean
 	}
 	extend type Mutation {
     addSubregion(pos:Int,subregion: RegionInput,arr:[RegionInput]): Region

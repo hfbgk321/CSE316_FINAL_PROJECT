@@ -54,6 +54,28 @@ module.exports ={
         }
       }
       return arr;
+    },
+    doesLandmarkExist: async (_,args,{req}) =>{
+      let {landmark,_id} = args;
+      let insensitiveLandmark = [];
+      insensitiveLandmark.push(new RegExp(landmark,"i"));
+      let regions = await Region.find({landmarks: {$in:insensitiveLandmark}}).count();
+      // let count = 0;
+      // let self_count = 0;
+      // if(regions){
+      //   for(let x = 0; x< regions.length;x++){
+      //     console.log(regions[x]._id == _id);
+      //     if(regions[x]._id != _id){
+      //       count++;
+      //     }else{
+      //       self_count++;
+      //     }
+      //   }
+      // }
+      return regions > 0;
+
+      // if(count > 0 ){ return true;}
+      // return false;
     }
   }, 
   

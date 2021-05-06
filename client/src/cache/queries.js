@@ -94,6 +94,10 @@ export const GET_ALL_REGIONS_EXCEPT_CURRENT = gql`
 			map
 		}
 	}
+`;
 
-
+export const DOES_LANDMARK_EXIST = gql`
+	query DoesLandmarkExist($_id:String,$landmark:String){
+		doesLandmarkExist(_id:$_id,landmark:$landmark)
+	}
 `;

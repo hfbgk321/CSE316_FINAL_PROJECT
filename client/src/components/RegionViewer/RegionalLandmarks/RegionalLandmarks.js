@@ -1,11 +1,12 @@
-import react,{useState,useEffect} from 'react';
-import {Button,Container,Row,Col,Form} from 'react-bootstrap';
+import react,{useState,useEffect,useRef} from 'react';
+import {Button,Container,Row,Col,Form,Alert} from 'react-bootstrap';
 import {useParams} from 'react-router-dom';
 
 import {ClickedRegion} from '../ClickedRegion/ClickedRegion';
 import {useQuery,useMutation} from '@apollo/client';
 import {ADD_LANDMARK_TO_REGION,CHANGE_LANDMARK_AT_POS,DELETE_LANDMARK_FROM_REGION} from '../../../cache/mutations';
 import "./RegionLandmarks.css";
+import {DOES_LANDMARK_EXIST} from '../../../cache/queries';
 
 import {UpdateLandmarks_Transaction,EditLandmarks_Transaction} from '../../../utils/jsTPS';
 
@@ -17,34 +18,23 @@ export const RegionalLandmarks = (props) =>{
   const [ChangeLandmarkAtPos] = useMutation(CHANGE_LANDMARK_AT_POS);
   const [DeleteLandmarkFromRegion] = useMutation(DELETE_LANDMARK_FROM_REGION);
   const [landmark,setLandmark] = useState("");
+  const [showError,setShowError] = useState(false);
+  const [showSuccess,setShowSuccess] = useState(false);
+
+  const formRef = useRef();
 
   const changeLandmark = (e) =>{
     setLandmark(e.target.value);
   }
 
-  const handleAddNewLandMark = async () =>{
-    if(landmark.length > 0){
-      let {loading, errors, data} = await AddLandmarkToRegion({variables:{
-        _id: props.region_id,
-        landmark:landmark
-      }});
-  
-      if(loading) console.log(loading);
-      if(errors){
-        console.log(`Error: ${errors.message}`);
-        return errors;
-      }
-  
-      if(data){
-        let {addLandmarkToRegion} = data;
-        if(addLandmarkToRegion!== null){
-          await props.region_refetch();
-          await props.subregions_refetch();
-        }
-      }
+
+  const {loading,data,error,refetch} = useQuery(DOES_LANDMARK_EXIST,{
+    variables:{
+      _id:props._id,
+      landmark:landmark
     }
-    
-  }
+  })
+
 
   //for changing name of landmark
 //_id:$_id,new_landmark:$new_landmark,pos:$pos
@@ -57,9 +47,29 @@ export const RegionalLandmarks = (props) =>{
 
   //_id,pos,opcode,landmark,delfunction,addfunction
   const handleAddDeleteLandmark = async (_id,pos,opcode,landmark) =>{
-    let transaction = new EditLandmarks_Transaction(_id,pos,opcode,landmark,DeleteLandmarkFromRegion,AddLandmarkToRegion);
-    props.tps.addTransaction(transaction);
-    await props.tpsRedo();
+    if(opcode == 1){
+      let transaction = new EditLandmarks_Transaction(_id,pos,opcode,landmark,DeleteLandmarkFromRegion,AddLandmarkToRegion);
+        props.tps.addTransaction(transaction);
+        await props.tpsRedo();
+        return;
+    }
+
+    await refetch();
+    if(data){
+      let {doesLandmarkExist} =data;
+      if(!doesLandmarkExist){
+        let transaction = new EditLandmarks_Transaction(_id,pos,opcode,landmark,DeleteLandmarkFromRegion,AddLandmarkToRegion);
+        props.tps.addTransaction(transaction);
+        await props.tpsRedo();
+        setShowSuccess(true);
+        setShowError(false);
+      }else{
+        setShowError(true);
+        setShowSuccess(false);
+      }
+      formRef.current.reset();
+    }
+    
   }
 
 
@@ -90,13 +100,34 @@ export const RegionalLandmarks = (props) =>{
       </Row>
       <Row>
         <Col>
-        <Form>
+        <Form ref ={formRef}>
           <Form.Control type="text" placeholder="Enter your new landmark name" onChange ={changeLandmark}  name = "name"/>
         </Form>
         </Col>
         <Col>
         <Button variant = "primary" onClick ={async () => await handleAddDeleteLandmark(props.region_id,props.region.landmarks.length,0,landmark)}>Add New Landmark</Button>
         </Col>
+      </Row>
+      <Row>
+      {
+      showError && <Alert show ={true} variant="warning" className ="alert"><p>
+      Unable To Add New Landmark. A landmark with this name already exists
+    </p><div className="d-flex justify-content-end">
+      <Button onClick = {() => setShowError(false)} variant="outline-warning">
+        Close me y'all!
+      </Button>
+    </div></Alert>
+    }
+
+    {
+      showSuccess && <Alert show ={true} variant="success" className ="alert"><p>
+      Successfully Added landmark
+    </p><div className="d-flex justify-content-end">
+      <Button onClick = {() => setShowSuccess(false)} variant="outline-success">
+        Close me y'all!
+      </Button>
+    </div></Alert>
+    }
       </Row>
     </Container>
   )
