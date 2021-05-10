@@ -14,7 +14,6 @@ import './RegionViewerMain.css';
 
 export const RegionViewerMain = (props) => {
   const {region_id} = useParams();
-  console.log(region_id);
   const [region,setRegion] = useState({});
   const [sibling,setSiblings] = useState([]);
   const [isInit,setIsInit] = useState(false);
@@ -169,7 +168,6 @@ export const RegionViewerMain = (props) => {
   }
 
   const tpsUndo =async () =>{
-      console.log("attempting undo...")
       if(props.tps.hasTransactionToUndo()){
         console.log("undo");
         await props.tps.undoTransaction();

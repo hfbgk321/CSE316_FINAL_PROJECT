@@ -19,7 +19,9 @@ export const RegionSpreadSheet =(props)=>{
   const [subregions,setSubregions] = useState([]);
   const [hasUndo,setHasUndo] = useState(false);
   const [hasRedo,setHasRedo] = useState(false);
-  const [focusPos,setFocusPos] = useState(0);
+  const [focusPos,setFocusPos] = useState(-1);
+  const [currentCol,setCurrentCol] = useState(-1);
+  const [prevCol,setPrevCol] = useState(-1);
 
   const [input,setInput] = useState({
     	_id: "",
@@ -149,8 +151,6 @@ export const RegionSpreadSheet =(props)=>{
 
 
   const AddOrDeleteSubregion = async (pos,_id,region,opcode) =>{
-    console.log(region);
-    console.log(isMap);
     let transaction = new UpdateRegionItems_Transaction(pos,_id,region,opcode,isMap ? AddSubregionToMap : AddSubregion,DeleteSubregion,isMap);
     props.tps.addTransaction(transaction);
     await tpsRedo();
@@ -178,8 +178,6 @@ export const RegionSpreadSheet =(props)=>{
     for(let x = 0; x< newRegionsToSort.length;x++){
 			newRegionIds.push(newRegionsToSort[x]._id);
 		}
-
-    console.log(isMap);
     let transaction = new SortRegionItems_Transaction(parent_id,oldRegionsIds,newRegionIds,isMap ? UpdateMapChildren:UpdateRegionChildren);
     props.tps.addTransaction(transaction);
     await tpsRedo();
@@ -218,22 +216,57 @@ export const RegionSpreadSheet =(props)=>{
 		const onKeyDown = async (event) => {
       if(subregions.length > 0){
         if(event.keyCode == 38){
-					if(focusPos == 0){
+					if(focusPos == 0 || focusPos == -1){
             setFocusPos(subregions.length-1);
+            let temp = prevCol;
+            setPrevCol(currentCol);
+            setPrevCol(temp);
           }else{
             setFocusPos(focusPos-1);
+            let temp = prevCol;
+            setPrevCol(currentCol);
+            setPrevCol(temp);
           }
-          console.log(focusPos);
 				}
 
 				if(event.keyCode == 40){
 						if(focusPos == subregions.length-1){
               setFocusPos(0);
+              let temp = prevCol;
+            setPrevCol(currentCol);
+            setPrevCol(temp);
             }else{
               setFocusPos(focusPos+1);
+              let temp = prevCol;
+            setPrevCol(currentCol);
+            setPrevCol(temp);
             }
-            console.log(focusPos);
 				}
+        //left
+        //0-2
+        if(event.keyCode == 37){
+          if(currentCol == 0 || currentCol == -1){
+            setPrevCol(currentCol); 
+            setCurrentCol(2);
+          }else{
+            setPrevCol(currentCol);
+            setCurrentCol(currentCol - 1);
+          }
+
+        }
+        //right
+        if(event.keyCode == 39){
+          if(currentCol == 2){
+            setPrevCol(currentCol);
+            setCurrentCol(0);
+          }else{
+            setPrevCol(currentCol);
+            setCurrentCol(currentCol+1)
+          }
+        }
+
+        // console.log(`Current Col : ${currentCol}`);
+        // console.log(`Focus Pos: ${focusPos}`);
       }
 				
 		}
@@ -243,7 +276,7 @@ export const RegionSpreadSheet =(props)=>{
             document.removeEventListener('keydown', onKeyDown);
         }
 
-	},[subregions,focusPos]);
+	},[subregions,focusPos,currentCol]);
 
   
   return (
@@ -276,7 +309,7 @@ export const RegionSpreadSheet =(props)=>{
             
             {subregion_loading? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
               return(
-                <Subregion region_name ={mapInfo.name}pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children} map ={map_id} focusPos ={focusPos} previousPaths ={previousPaths}/>
+                <Subregion region_name ={mapInfo.name}pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children} map ={map_id} focusPos ={focusPos} previousPaths ={previousPaths} currentCol ={currentCol} setCurrentCol ={setCurrentCol} prevCol ={prevCol}/>
               )
             })}
 

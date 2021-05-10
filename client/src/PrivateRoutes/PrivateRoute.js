@@ -7,7 +7,6 @@ export const PrivateRoute = ({ component: Component,fetchUser,user,isInit,histor
 
   return (
   <Route {...rest} render={(props)=>{
-    console.log(user);
     if(!isInit) return "";
     if(user === null){
       return <Redirect to ={{pathname:"/welcome", state:{from: props.location}}}/>

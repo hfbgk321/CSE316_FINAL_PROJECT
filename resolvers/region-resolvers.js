@@ -60,22 +60,7 @@ module.exports ={
       let insensitiveLandmark = [];
       insensitiveLandmark.push(new RegExp(landmark,"i"));
       let regions = await Region.find({landmarks: {$in:insensitiveLandmark}}).count();
-      // let count = 0;
-      // let self_count = 0;
-      // if(regions){
-      //   for(let x = 0; x< regions.length;x++){
-      //     console.log(regions[x]._id == _id);
-      //     if(regions[x]._id != _id){
-      //       count++;
-      //     }else{
-      //       self_count++;
-      //     }
-      //   }
-      // }
       return regions > 0;
-
-      // if(count > 0 ){ return true;}
-      // return false;
     }
   }, 
   
@@ -149,7 +134,6 @@ module.exports ={
       }
       await Map.findByIdAndUpdate({_id:parent_id},{children:[...temp_arr]},{new:true});
       let saved = await region.save();
-      console.log(saved);
       return saved;
     },
 
@@ -183,7 +167,8 @@ module.exports ={
 
     updateSubregionField: async (_,args,{res}) =>{
       let {_id,field,value} = args;
-      let updated = await Region.findByIdAndUpdate({_id,_id},{[field]:value},{new:true});
+      let updated = await Region.findByIdAndUpdate({_id:_id},{[field]:value},{new:true});
+      console.log(updated);
       return updated;
     },
 
@@ -191,6 +176,7 @@ module.exports ={
       let {_id, children} = args;
 
       let updated = await Region.findByIdAndUpdate({_id:_id},{children:[...children]},{new:true});
+      console.log(updated);
       return updated;
     },
 
@@ -259,33 +245,13 @@ module.exports ={
       return {};
     },
     changeParent: async (_,args,{res}) =>{
-      //_id:String,old_parent:String,new_parent:String
-      /**
-         * Find the region who wants to change its parent
-         * Find the current parent of that region.
-         * delete the region's _id from the current parent's children 
-         * change the parent_id of the region to the new parent id
-         * 
-         * find the new parent of the region.
-         * add the current region's _id to the new parent's children's property
-         * 
-       */
-      //name: layer1 - c _id: 608e15874b2350110cba6407
-      //old_parent: 608e0989397a79287cc55ff7
-      //new_parent: 608e0b97397a79287cc55fff -> layer 1
+      
       let {_id,old_parent_id,new_parent_id} = args;
-      console.log("_id: "+_id);
-      console.log("old_parent: "+old_parent_id);
-      console.log("new_parent: "+new_parent_id);
       let current_region = await Region.findById({_id:_id});
-
-      console.log("current_region: " );
-      console.log(current_region);
 
       let current_parent = current_region.isParentAMap ? await Map.findById({_id:old_parent_id}): await Region.findById({_id:old_parent_id});
       
-      console.log("current_parent: " );
-      console.log(current_parent);
+
 
       current_parent.children = deleteChildrenFromArray(_id,current_parent.children);
       
@@ -299,15 +265,11 @@ module.exports ={
 
       current_region.parent_id = new_parent_id;
       current_region.isParentAMap = isMap;
-      console.log("updated current region");
-      console.log(current_region);
+
 
       if(old_parent_id!==new_parent_id){
         new_parent.children.push(_id);
       }
-      
-      console.log("new parent");
-      console.log(new_parent);
 
       await new_parent.save();
       await current_region.save();

@@ -278,7 +278,6 @@ export class EditItem_Transaction extends jsTPS_Transaction {
 
 export class jsTPS {
   constructor() {
-      console.log("reconstructed............................................");
       // THE TRANSACTION STACK
       this.transactions = [];
       // KEEPS TRACK OF WHERE WE ARE IN THE STACK, THUS AFFECTING WHAT
@@ -352,10 +351,6 @@ export class jsTPS {
     this.performingDo = false;
           
       }
-      console.log('transactions: ' + this.getSize());
-      console.log('redo transactions:' + this.getRedoSize());
-      console.log('undo transactions:' + this.getUndoSize());
-  console.log(' ')
   return retVal;
   }
   
@@ -402,10 +397,6 @@ export class jsTPS {
           this.mostRecentTransaction--;
     this.performingUndo = false;
       }
-      console.log('transactions: ' + this.getSize());
-      console.log('redo transactions:' + this.getRedoSize());
-      console.log('undo transactions:' + this.getUndoSize());
-      console.log(' ')
   return(retVal);
   }
 
@@ -416,7 +407,7 @@ export class jsTPS {
    */
   clearAllTransactions() {
       // REMOVE ALL THE TRANSACTIONS
-      console.log("JKANKFADNKOFAKLJFLKADJFDAKJLADJLDSAJLK clear");
+
       this.transactions = [];
       
       // MAKE SURE TO RESET THE LOCATION OF THE

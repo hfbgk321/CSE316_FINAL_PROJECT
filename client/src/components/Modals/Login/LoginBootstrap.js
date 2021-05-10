@@ -17,7 +17,6 @@ export const LoginBootStrap = (props) =>{
 		const { name, value } = e.target;
 		const updated = { ...input, [name]: value };
 		setInput(updated);
-    console.log(input);
 	}
 
   const handleLogin = async (e) => {

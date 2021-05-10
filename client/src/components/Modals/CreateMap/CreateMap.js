@@ -21,7 +21,6 @@ export const CreateMap = (props) =>{
 
   const updateName = (e) => {
 		setName(e.target.value);
-    console.log(name);
 	}
 
   const handleCreateNewMap = async (e) => {

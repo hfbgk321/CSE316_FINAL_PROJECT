@@ -20,25 +20,19 @@ export const RegionalInfo = (props) =>{
 
   const getImagePath = () =>{
     let paths = props.previousPaths;
-    console.log("in prop change");
     let src = "images";
     for(let x = 0; x< paths.length;x++){
       src+=`/${paths[x].name}`;
     }
     src+=`/${props.region.name} Flag.png`;
-    console.log(src);
     try{
       let temp = require(`../../../${src}`).default;
-      console.log(temp);
       return src;
     }catch(error){
-      console.log(error);
       return 'images/mclovin.jpg';
     }
   }
-  getImagePath();
 
-  console.log(props.region_id);
   const {loading:exclude_current_loading,error:exclude_current_error,data:exclude_current_data,refetch:exclude_current_refetch} = useQuery(GET_ALL_REGIONS_EXCEPT_CURRENT,{
     variables:{
       _id:props.region_id
@@ -93,9 +87,6 @@ export const RegionalInfo = (props) =>{
   //_id, newParent,oldParent,callback
 
   const handleChangeParents = async (_id, newParent,oldParent) =>{
-    console.log("old "+oldParent);
-    console.log("new "+newParent);
-    console.log("_id "+_id);
       let transaction = new EditParents_Transaction(_id,newParent,oldParent,ChangingParent);
       props.tps.addTransaction(transaction);
       await props.tpsRedo();

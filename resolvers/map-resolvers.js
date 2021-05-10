@@ -26,13 +26,12 @@ module.exports ={
 
       if(current_map){
         let current_map_access_id = current_map.access_id;
-        console.log(`Current Id: ${current_map_access_id}`);
 
         let most_recently_accessed_map = await Map.findOneAndUpdate({_id:all_maps[0]._id},{access_id:current_map_access_id},{new:true});
-        console.log(most_recently_accessed_map);
+
         current_map.access_id = all_maps[0].access_id;
         let updated = await current_map.save();
-        console.log(updated);
+
         return current_map;
       }
       return {};
@@ -41,7 +40,7 @@ module.exports ={
   Mutation:{
     addNewMap: async (_,args,{req}) =>{
       let {map} = args;
-      console.log(map);
+
       let ownerId = new ObjectId(req.userId);
       let _id = new ObjectId();
       map.ownerId = ownerId;
@@ -63,9 +62,7 @@ module.exports ={
     },
     deleteMap: async (_,args,{req}) =>{
       let {_id} = args;
-      console.log(_id);
       let current_map = await Map.findById({_id:new ObjectId(_id)});
-      console.log(current_map);
       let children = current_map.children;
       let deleted = await Map.findByIdAndDelete({_id:new ObjectId(_id)});
     

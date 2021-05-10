@@ -20,8 +20,6 @@ export const ChangeParent =(props) =>{
   //_id, newParent,oldParent,callback
   const handleSelectOption = (e) =>{
     setSelectedParent(e.target.value);
-    console.log("new parent_id "+selectedParent);
-    console.log("old_parent_id: "+props.region.parent_id);
   }
 
 

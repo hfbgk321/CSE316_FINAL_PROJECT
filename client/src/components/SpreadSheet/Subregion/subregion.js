@@ -2,9 +2,7 @@ import {useState,useEffect} from 'react';
 import {Button,Row,Col,Form,Image} from 'react-bootstrap';
 import {DeleteRegion} from '../../Modals/DeleteRegion/DeleteRegion';
 import './Subregion.css';
-import mclovin from '../../../images/mclovin.jpg'
-import algeria from '../../../images/The World/Africa/Algeria Flag.png';
-import { assertScalarType, assertSchema } from 'graphql';
+
 
 
 
@@ -15,25 +13,59 @@ export const Subregion = (props) =>{
   const [editName,toggleEditName] = useState(false);
   const [editCapital, toggleEditCapital] = useState(false);
   const [editLeader,toggleEditLeader] = useState(false);
-  const [editFlag,toggleEditFlag] = useState(false);
+  const [name,setName] = useState(props.name);
+  const [capital,setCapital] = useState(props.capital);
+  const [leader,setLeader] = useState(props.leader);
   const [showDeleteRegion,toggleDeleteRegion] = useState(false);
   const [mapPath,setMapPath] = useState('images/The World/Africa/Algeria Flag.png');
+ 
+  //_id, field,new_value,old_value
+  useEffect(()=>{
+    
+    async function test(){
+      console.log(`Previous Value: ${props.prevCol}`);
+      console.log(`Focus Pos: ${props.focusPos}`);
+      switch(props.prevCol){
+        case 0:
+          if(props.name !=name && name.length > 0){
+            await props.updateSubregion(props._id,"name",name,props.name);
+          }
+          
+          break;
+        case 1:
+          if(props.capital!= capital&& capital.length > 0){
+            await props.updateSubregion(props._id,"capital",capital,props.capital);
+          }
+          
+          break;
+        case 2:
+          if(props.leader!= leader && leader.length > 0){
+            await props.updateSubregion(props._id,"leader",leader,props.leader);
+          }
+          
+          break;
+        default:
+          break;
+      }
+    }
+
+    test();
+
+   
+  },[props.prevCol,props.focusPos]);
+
 
   const getImagePath = () =>{
     let paths = props.previousPaths;
-    console.log("in prop change");
     let src = "images";
     for(let x = 0; x< paths.length;x++){
       src+=`/${paths[x].name}`;
     }
     src+=`/${props.region_name}/${props.name} Flag.png`;
-    console.log(src);
     try{
       let temp = require(`../../../${src}`).default;
-      console.log(temp);
       return src;
     }catch(error){
-      console.log(error);
       return 'images/mclovin.jpg';
     }
   }
@@ -46,6 +78,7 @@ export const Subregion = (props) =>{
     timer = setTimeout(()=>{
       if(!click){
         toggleEditName(!editName);
+        props.setCurrentCol(0);
       }
       click = false;
     },200);
@@ -59,14 +92,17 @@ export const Subregion = (props) =>{
 
   const setShowDeleteRegion = () =>{
     toggleDeleteRegion(!showDeleteRegion);
+    props.setCurrentCol(-1);
   }
 
   const handleEditName = async (e) =>{
-    let {name, value} = e.target;
+    let {name,value} = e.target;
+
     if(value !== props[name] && value.length >0){
       await props.updateSubregion(props._id,name,value,props[name]);
     }
     toggleEditName(false);
+    props.setCurrentCol(-1);
   }
 
   const handleEditCapital = async (e) =>{
@@ -75,6 +111,7 @@ export const Subregion = (props) =>{
       await props.updateSubregion(props._id,name,value,props[name]);
     }
     toggleEditCapital(false);
+    props.setCurrentCol(-1);
   }
 
   const handleEditLeader = async (e) =>{
@@ -83,15 +120,9 @@ export const Subregion = (props) =>{
       await props.updateSubregion(props._id,name,value,props[name]);
     }
     toggleEditLeader(false);
+    props.setCurrentCol(-1);
   }
 
-  const handleEditFlag = async (e) =>{
-    let {name, value} = e.target;
-    if(value !== props[name]&& value.length >0){
-      await props.updateSubregion(props._id,name,value,props[name]);
-    }
-    toggleEditFlag(false);
-  }
 
 //pos,_id,region,opcode
   const handleDeleteSubregion =async () =>{
@@ -111,6 +142,7 @@ export const Subregion = (props) =>{
     }
     await props.AddOrDeleteSubregion(props.pos,props._id,region,0);
     toggleDeleteRegion(false);
+    props.setCurrentCol(-1);
   }
 
   const manipulateUrl = () =>{
@@ -143,10 +175,6 @@ export const Subregion = (props) =>{
   const handleClickLandmarks =() =>{
     window.location = `/your_maps/${props._id}/region/viewer`;
   }
-  const handleDefaultSrc =(ev) =>{
-    ev.target.src = mclovin;
-  }
-
 
   return (
     <>
@@ -160,10 +188,10 @@ export const Subregion = (props) =>{
         
       </td>
       {
-        !editName ? <td onClick ={handleClick} onDoubleClick = {handleDoubleClick} >{props.name}</td> : (
+        (props.pos == props.focusPos ? (props.currentCol !=0 && !editName) : !editName) ? <td onClick ={handleClick} onDoubleClick = {handleDoubleClick} >{props.name}</td> : (
           <td>
             <Form>
-            <Form.Control type="text" placeholder="Enter your new name" onBlur ={handleEditName} autoFocus={true} name = "name"/>
+            <Form.Control type="text" value = {name} placeholder="Enter your new name" onBlur ={handleEditName} autoFocus={true} name = "name" onChange ={(e) => setName(e.target.value)}/>
           </Form>
           </td>
           
@@ -171,10 +199,15 @@ export const Subregion = (props) =>{
       }
 
       {
-        !editCapital ? <td onClick = {() =>{toggleEditCapital(!editCapital)}}>{props.capital}</td> : (
+        (props.pos == props.focusPos ?  (props.currentCol !=1 && !editCapital) : !editCapital) ? <td onClick = {() =>{
+          toggleEditCapital(!editCapital);
+          props.setCurrentCol(1);
+          }}>
+            
+            {props.capital}</td> : (
           <td>
             <Form>
-              <Form.Control type="text" placeholder="Enter your new capital" onBlur ={handleEditCapital} autoFocus={true} name = "capital"/>
+              <Form.Control type="text" value ={capital} placeholder="Enter your new capital" onBlur ={handleEditCapital}  autoFocus={true} name = "capital" onChange ={(e) => setCapital(e.target.value)}/>
             </Form>
           </td>
         )
@@ -182,10 +215,14 @@ export const Subregion = (props) =>{
 
 
       {
-        !editLeader ? <td onClick = {() =>{toggleEditLeader(!editLeader)}}>{props.leader}</td> : (
+        (props.pos == props.focusPos ?  (props.currentCol !=2 && !editLeader) : !editLeader) ? <td onClick = {() =>{
+          toggleEditLeader(!editLeader)
+          props.setCurrentCol(2);
+        
+        }}>{props.leader}</td> : (
           <td>
             <Form>
-            <Form.Control type="text" placeholder="Enter your new leader" onBlur ={handleEditLeader} autoFocus={true} name = "leader"/>
+            <Form.Control type="text" value ={leader} placeholder="Enter your new leader" onBlur ={handleEditLeader} autoFocus={true} name = "leader" onChange ={(e) => setLeader(e.target.value)}/>
           </Form>
           </td>
           

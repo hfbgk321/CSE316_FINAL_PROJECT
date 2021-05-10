@@ -24,7 +24,6 @@ export const UpdateAccount = (props) =>{
 		const { name, value } = e.target;
 		const updated = { ...input, [name]: value };
 		setInput(updated);
-		console.log(input);
 	};
 
   const handleCreateAccount = async (e) => {
@@ -44,7 +43,6 @@ export const UpdateAccount = (props) =>{
 			return `Error: ${error.message}` 
 		};
 		if (data) {
-			console.log(data)
 			toggleLoading(false);
 			if(data.update.email === 'already exists') {
         setError('User with that email already registered');

@@ -55,7 +55,6 @@ export const NavbarComponent = (props) =>{
   if(!props.isInit){
     return "";
   }
-  console.log(props.prevPaths);
   return (
 
     <Navbar expand="lg" variant="light" bg="light">
