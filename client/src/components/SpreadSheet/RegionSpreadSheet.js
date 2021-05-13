@@ -144,7 +144,7 @@ export const RegionSpreadSheet =(props)=>{
 
   const updateSubregion = async(_id, field,new_value,old_value)=>{
     let transaction = new EditItem_Transaction(_id,field,new_value,old_value,UpdateSubregionField);
-    props.tps.addTransaction(transaction);
+    await props.tps.addTransaction(transaction);
     await tpsRedo();
   }
   //pos,_id,region,opcode,addfunc,delfunc
@@ -152,7 +152,7 @@ export const RegionSpreadSheet =(props)=>{
 
   const AddOrDeleteSubregion = async (pos,_id,region,opcode) =>{
     let transaction = new UpdateRegionItems_Transaction(pos,_id,region,opcode,isMap ? AddSubregionToMap : AddSubregion,DeleteSubregion,isMap);
-    props.tps.addTransaction(transaction);
+    await props.tps.addTransaction(transaction);
     await tpsRedo();
   }
 
@@ -179,7 +179,7 @@ export const RegionSpreadSheet =(props)=>{
 			newRegionIds.push(newRegionsToSort[x]._id);
 		}
     let transaction = new SortRegionItems_Transaction(parent_id,oldRegionsIds,newRegionIds,isMap ? UpdateMapChildren:UpdateRegionChildren);
-    props.tps.addTransaction(transaction);
+    await props.tps.addTransaction(transaction);
     await tpsRedo();
   }
 
@@ -294,22 +294,22 @@ export const RegionSpreadSheet =(props)=>{
             <tr>
               <th>Options</th>
               <th onClick ={async () => await registerSortItemsTransaction("name")} 
-              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Name</th>
+              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"} style ={{cursor:subregions.length > 0 ? "pointer":"none"}}>Name</th>
               <th onClick = {async () => await registerSortItemsTransaction("capital")} 
-              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Capital</th>
+              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"} style ={{cursor:subregions.length > 0 ? "pointer":"none"}}>Capital</th>
               <th onClick = {async () => await registerSortItemsTransaction("leader")}
-              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Leader</th>
+              className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"} style ={{cursor:subregions.length > 0 ? "pointer":"none"}}>Leader</th>
               <th onClick = {async () => await registerSortItemsTransaction("flag")}
               className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Flag</th>
               <th className ={subregions.length == 0? "table_header_without_regions" :"table_header_with_regions"}>Landmarks</th>
             </tr>
           </thead>
          
-          <tbody >
+          <tbody>
             
-            {subregion_loading? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
+            {subregion_loading ? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
               return(
-                <Subregion region_name ={mapInfo.name}pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children} map ={map_id} focusPos ={focusPos} previousPaths ={previousPaths} currentCol ={currentCol} setCurrentCol ={setCurrentCol} prevCol ={prevCol}/>
+                <Subregion region_name ={mapInfo.name}pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children} map ={map_id} focusPos ={focusPos} previousPaths ={previousPaths} currentCol ={currentCol} setCurrentCol ={setCurrentCol} prevCol ={prevCol} setFocusPos ={setFocusPos} setPrevCol ={setPrevCol}/>
               )
             })}
 

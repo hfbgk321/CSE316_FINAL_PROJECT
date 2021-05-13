@@ -1,5 +1,5 @@
 .viewer_img {
-  height: 20rem;
+  height: 15rem;
   width: auto;
 }
 
@@ -11,4 +11,8 @@
 
 .viewer_container {
   margin-top: 2rem;
+}
+
+.pencil {
+  margin-left: 5rem;
 }

@@ -88,7 +88,7 @@ export const RegionalInfo = (props) =>{
 
   const handleChangeParents = async (_id, newParent,oldParent) =>{
       let transaction = new EditParents_Transaction(_id,newParent,oldParent,ChangingParent);
-      props.tps.addTransaction(transaction);
+      await props.tps.addTransaction(transaction);
       await props.tpsRedo();
       await props.parentRegion_refetch();
       await props.previous_paths_refetch();

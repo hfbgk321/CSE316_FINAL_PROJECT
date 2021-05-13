@@ -23,25 +23,18 @@ export const RegionalLandmarks = (props) =>{
 
   const formRef = useRef();
 
+
+
   const changeLandmark = (e) =>{
     setLandmark(e.target.value);
   }
-
-
-  const {loading,data,error,refetch} = useQuery(DOES_LANDMARK_EXIST,{
-    variables:{
-      _id:props._id,
-      landmark:landmark
-    }
-  })
-
 
   //for changing name of landmark
 //_id:$_id,new_landmark:$new_landmark,pos:$pos
 
   const handleChangeLandmark = async (_id,new_landmark,old_landmark,pos) =>{
     let transaction = new UpdateLandmarks_Transaction(_id,old_landmark, new_landmark,pos,ChangeLandmarkAtPos);
-    props.tps.addTransaction(transaction);
+    await props.tps.addTransaction(transaction);
     await props.tpsRedo();
   }
 
@@ -49,27 +42,28 @@ export const RegionalLandmarks = (props) =>{
   const handleAddDeleteLandmark = async (_id,pos,opcode,landmark) =>{
     if(opcode == 1){
       let transaction = new EditLandmarks_Transaction(_id,pos,opcode,landmark,DeleteLandmarkFromRegion,AddLandmarkToRegion);
-        props.tps.addTransaction(transaction);
+        await props.tps.addTransaction(transaction);
         await props.tpsRedo();
+        await props.landmarks_refetch();
+        await props.children_refetch();
         return;
     }
-
-    await refetch();
-    if(data){
-      let {doesLandmarkExist} =data;
-      if(!doesLandmarkExist){
-        let transaction = new EditLandmarks_Transaction(_id,pos,opcode,landmark,DeleteLandmarkFromRegion,AddLandmarkToRegion);
-        props.tps.addTransaction(transaction);
+    console.log(props.landmarks);
+    if(props.landmarks.includes(landmark)){
+      setShowError(true);
+      setShowSuccess(false);
+      setLandmark("");
+    }else{
+      let transaction = new EditLandmarks_Transaction(_id,pos,opcode,landmark,DeleteLandmarkFromRegion,AddLandmarkToRegion);
+        await props.tps.addTransaction(transaction);
         await props.tpsRedo();
         setShowSuccess(true);
         setShowError(false);
-      }else{
-        setShowError(true);
-        setShowSuccess(false);
-      }
-      formRef.current.reset();
+        setLandmark("");
+        await props.landmarks_refetch();
+        await props.children_refetch();
     }
-    
+    formRef.current.reset();
   }
 
 
@@ -81,16 +75,31 @@ export const RegionalLandmarks = (props) =>{
       <Row>
         <Col>
         <ListGroup as ="ul" className ="region_landmarks_list">
+          {
+            props.region.landmarks.map((landmark,key)=>{
+              return <ClickedRegion landmarks ={props.landmarks} landmark ={landmark} key = {key} _id ={props.region._id} ownerId ={props.region.ownerId} pos ={key} handleChangeLandmark ={handleChangeLandmark} tpsRedo ={props.tpsRedo} tpsUndo ={props.tpsUndo} handleAddDeleteLandmark={handleAddDeleteLandmark} landmarks_refetch ={props.landmarks_refetch} children_refetch ={props.children_refetch} />
+            })
+          }
+          {
+            props.children.map((child,key)=>{
+              return <>
+                {child.landmarks.map((landmark,key)=>{
+                  return  <ListGroup.Item as ="li" key ={key}>{landmark}</ListGroup.Item>
+                })}
+              </>
+              
+            })
+          }
        
-              {props.siblings.map((sibling,key) =>{
+              {/* {props.sibling.map((sibling,key) =>{
                 return <>
                     {sibling._id === props.region._id ? sibling.landmarks.map((landmark,key)=>{
-                      return <ClickedRegion landmark ={landmark} key = {key} _id ={sibling._id} pos ={key} handleChangeLandmark ={handleChangeLandmark} tpsRedo ={props.tpsRedo} tpsUndo ={props.tpsUndo} handleAddDeleteLandmark={handleAddDeleteLandmark} />
+                      return <ClickedRegion landmarks ={props.landmarks} landmark ={landmark} key = {key} _id ={sibling._id} ownerId ={sibling.ownerId} pos ={key} handleChangeLandmark ={handleChangeLandmark} tpsRedo ={props.tpsRedo} tpsUndo ={props.tpsUndo} handleAddDeleteLandmark={handleAddDeleteLandmark} landmarks_refetch ={props.landmarks_refetch} />
                     }): sibling.landmarks.map((landmark,key)=>{
                       return <ListGroup.Item as ="li" key ={key}>{landmark}</ListGroup.Item>
                     }) }
                     </>
-              })}
+              })} */}
               
 
         </ListGroup>

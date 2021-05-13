@@ -3,6 +3,7 @@ import {Redirect,Route} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import * as queries from '../cache/queries';
 import YourMaps from '../components/yourmaps/YourMaps';
+
 export const PrivateRoute = ({ component: Component,fetchUser,user,isInit,history,handleSetPaths,tps, ...rest }) => {
 
   return (

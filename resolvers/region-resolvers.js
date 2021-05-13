@@ -55,17 +55,28 @@ module.exports ={
       }
       return arr;
     },
-    doesLandmarkExist: async (_,args,{req}) =>{
-      let {landmark,_id} = args;
-      let insensitiveLandmark = [];
-      insensitiveLandmark.push(new RegExp(landmark,"i"));
-      let regions = await Region.find({landmarks: {$in:insensitiveLandmark}}).count();
-      return regions > 0;
+    getAllLandmarks: async (_,args,{req}) =>{
+      let landmarks = [];
+      let regions = await Region.find({ownerId:new ObjectId(req.userId)});
+      for(let x = 0; x< regions.length;x++){
+        landmarks = [...landmarks,...regions[x].landmarks];
+      }
+      console.log(landmarks);
+      return landmarks;
+    },
+    getChildren: async (_,args,{req}) =>{
+      let {_id} = args;
+      let region = await Region.findById({_id:_id});
+      let children = [];
+      for(let x = 0; x< region.children.length;x++){
+        await getChildrenComponents(region.children[x],children);
+      }
+      return children;
     }
   }, 
   
   Mutation:{
-    addSubregion: async (_,args,{res}) => {
+    addSubregion: async (_,args,{req}) => {
       let {pos,subregion,arr} = args;
       if(subregion._id.length == 0){
         let _id = new ObjectId();
@@ -74,7 +85,7 @@ module.exports ={
       if(arr.length > 0){
         await remakeComponents(arr);
       }
-      
+      subregion.ownerId = new ObjectId(req.userId);
       let region = new Region(subregion);
       let parent_id = new ObjectId(region.parent_id);
       let parent_region = await Region.findById({_id:parent_id});
@@ -100,7 +111,7 @@ module.exports ={
       return saved;
     },
 
-    addSubregionToMap: async (_,args,{res}) =>{
+    addSubregionToMap: async (_,args,{req}) =>{
       let {pos,subregion,arr} = args;
       let isNewSubregion = subregion._id.length > 0;
       if(arr.length > 0){
@@ -112,7 +123,7 @@ module.exports ={
         let _id = new ObjectId();
         subregion._id = _id;
       }
-      
+      subregion.ownerId = new ObjectId(req.userId);
       let region = new Region(subregion);
       let parent_id = new ObjectId(region.parent_id);
       let parent_region = await Map.findById({_id:parent_id});
@@ -168,7 +179,7 @@ module.exports ={
     updateSubregionField: async (_,args,{res}) =>{
       let {_id,field,value} = args;
       let updated = await Region.findByIdAndUpdate({_id:_id},{[field]:value},{new:true});
-      console.log(updated);
+      console.log('updated: '+updated);
       return updated;
     },
 
@@ -180,7 +191,7 @@ module.exports ={
       return updated;
     },
 
-    addLandmarkToRegion : async (_,args,{res}) =>{
+    addLandmarkToRegion : async (_,args,{req}) =>{
       let {_id,landmark,pos} = args;
       let region = await Region.findById({_id:_id});
       let region_landmarks = region.landmarks;
@@ -265,6 +276,9 @@ module.exports ={
 
       current_region.parent_id = new_parent_id;
       current_region.isParentAMap = isMap;
+      if(isMap){
+        current_region.map = new_parent_id;
+      }
 
 
       if(old_parent_id!==new_parent_id){
@@ -345,7 +359,6 @@ const allRegionsExceptThis = async (starting_id,excluded_id,arr) =>{
     return;
   }
 }
-
 
 
 

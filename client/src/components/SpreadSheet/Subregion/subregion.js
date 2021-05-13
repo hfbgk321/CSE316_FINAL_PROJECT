@@ -96,13 +96,17 @@ export const Subregion = (props) =>{
   }
 
   const handleEditName = async (e) =>{
+    debugger;
     let {name,value} = e.target;
 
     if(value !== props[name] && value.length >0){
       await props.updateSubregion(props._id,name,value,props[name]);
     }
     toggleEditName(false);
-    props.setCurrentCol(-1);
+    if(props.currentCol == 0 && props.focusPos == props.pos){
+      props.setCurrentCol(-1);
+      props.setFocusPos(-1);
+    }
   }
 
   const handleEditCapital = async (e) =>{
@@ -111,7 +115,10 @@ export const Subregion = (props) =>{
       await props.updateSubregion(props._id,name,value,props[name]);
     }
     toggleEditCapital(false);
-    props.setCurrentCol(-1);
+    if(props.currentCol == 1 && props.focusPos == props.pos){
+      props.setCurrentCol(-1);
+      props.setFocusPos(-1);
+    }
   }
 
   const handleEditLeader = async (e) =>{
@@ -120,7 +127,10 @@ export const Subregion = (props) =>{
       await props.updateSubregion(props._id,name,value,props[name]);
     }
     toggleEditLeader(false);
-    props.setCurrentCol(-1);
+    if(props.currentCol == 2 && props.focusPos == props.pos){
+      props.setCurrentCol(-1);
+      props.setFocusPos(-1);
+    }
   }
 
 
@@ -178,7 +188,9 @@ export const Subregion = (props) =>{
 
   return (
     <>
-    <tr id = {props._id} className ={props.pos == props.focusPos ? "selected_region":"unselected_region" }>
+    <tr id = {props._id} className ={props.pos == props.focusPos ? "selected_region":"unselected_region" } onClick ={()=>
+      props.setFocusPos(props.pos)
+    } >
       <td>
         <Row>
           <Col><Button variant ="danger" onClick ={setShowDeleteRegion}>Delete</Button></Col>
@@ -188,9 +200,9 @@ export const Subregion = (props) =>{
         
       </td>
       {
-        (props.pos == props.focusPos ? (props.currentCol !=0 && !editName) : !editName) ? <td onClick ={handleClick} onDoubleClick = {handleDoubleClick} >{props.name}</td> : (
+        (props.pos == props.focusPos ? (props.currentCol !=0 && !editName) : !editName) ? <td onClick ={handleClick} onDoubleClick = {handleDoubleClick}>{props.name}</td> : (
           <td>
-            <Form>
+            <Form >
             <Form.Control type="text" value = {name} placeholder="Enter your new name" onBlur ={handleEditName} autoFocus={true} name = "name" onChange ={(e) => setName(e.target.value)}/>
           </Form>
           </td>
@@ -233,7 +245,7 @@ export const Subregion = (props) =>{
         <img  className="flag_img" src={require(`../../../${getImagePath()}`).default}/>
       </td>
 
-      <td onClick ={handleClickLandmarks} className ="landmark_td">{props.landmarks[0]+","+props.landmarks[1]+" ....."}</td>
+      <td onClick ={handleClickLandmarks} className ="landmark_td">{props.landmarks.length  == 0 ? "None": props.landmarks.length <=1 ? props.landmarks[0] : props.landmarks[0]+","+props.landmarks[1]+", ........."}</td>
   </tr>
   {showDeleteRegion && <DeleteRegion setShowDeleteRegion ={setShowDeleteRegion} showDeleteRegion ={showDeleteRegion} handleDeleteSubregion ={handleDeleteSubregion} />}
   </>

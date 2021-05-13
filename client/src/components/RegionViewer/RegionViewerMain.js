@@ -4,7 +4,7 @@ import {useParams} from 'react-router-dom';
 import {RegionalInfo} from './RegionalInfo/RegionalInfo';
 import {RegionalLandmarks} from './RegionalLandmarks/RegionalLandmarks';
 import {useQuery,useMutation} from '@apollo/client';
-import {GET_REGION_BY_ID,GET_SUBREGION_BY_ID,GET_MAP_BY_ID,GET_PREVIOUS_PATHS} from '../../cache/queries';
+import {GET_REGION_BY_ID,GET_SUBREGION_BY_ID,GET_MAP_BY_ID,GET_PREVIOUS_PATHS,GET_ALL_LANDMARKS,GET_CHILDREN} from '../../cache/queries';
 import {BiUndo,BiRedo} from 'react-icons/bi';
 import {BsArrow90DegLeft,BsArrow90DegRight} from 'react-icons/bs';
 import { BallBeat,LineScalePulseOutRapid } from 'react-pure-loaders';
@@ -26,6 +26,53 @@ export const RegionViewerMain = (props) => {
   const [hasUndo,setHasUndo] = useState(false);
   const [hasRedo,setHasRedo] = useState(false);
   const [previousPaths,setPreviousPaths] = useState([]);
+  const [landmarks,setLandmarks] = useState([]);
+  const [children,setChildren] = useState([]);
+
+
+
+  const {loading:landmarks_loading, error:landmarks_error, data:landmarks_data,refetch: landmarks_refetch} = useQuery(GET_ALL_LANDMARKS);
+
+  useEffect(()=>{
+    if(landmarks_loading){
+      console.log(landmarks_loading);
+    }
+    if(landmarks_error){
+      console.log(landmarks_error.message);
+      return landmarks_error;
+    }
+
+    if(landmarks_data){
+      let {getAllLandmarks} = landmarks_data;
+      if(getAllLandmarks!== null){
+        setLandmarks(getAllLandmarks);
+      }
+    }
+  },[landmarks,landmarks_data]);
+
+
+  const {loading:children_loading, error:children_error, data:children_data,refetch:children_refetch} = useQuery(GET_CHILDREN,{
+    variables:{
+      _id: region_id
+    }
+  })
+
+  useEffect(()=>{ 
+    debugger;
+    if(children_loading){
+      console.log(children_loading);
+    }
+    if(children_error){
+      console.log(children_error.message);
+      return children_error.message;
+    }
+    if(children_data){
+      let {getChildren} = children_data;
+      if(getChildren!==null){
+        setChildren(getChildren);
+      }
+    } 
+  },[children, children_data]);
 
   const {loading:region_loading,error:region_error,data:region_data,refetch:region_refetch} = useQuery(GET_REGION_BY_ID,{variables:{_id:region_id}});
 
@@ -197,7 +244,7 @@ export const RegionViewerMain = (props) => {
 
   
 
-  if(region_loading || subregions_loading || parentRegion_loading || previous_paths_loading){
+  if(region_loading || subregions_loading || parentRegion_loading || previous_paths_loading || landmarks_loading){
     return <div style={{position:"relative",left:700,top:300}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div>
   }
 
@@ -227,7 +274,7 @@ export const RegionViewerMain = (props) => {
           <RegionalInfo isInit ={isInit} region ={region} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} parentRegion ={parentRegion} isMap ={isMap} history ={props.history} parentRegion_refetch ={parentRegion_refetch} previous_paths_refetch ={previous_paths_refetch} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps} previousPaths ={previousPaths}/>
         </Col>
         <Col>
-          <RegionalLandmarks region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps}/>
+          <RegionalLandmarks landmarks ={landmarks} region = {region} isInit ={isInit} siblings ={sibling} region_refetch ={region_refetch} subregions_refetch ={subregions_refetch} region_id ={region_id} map_id ={mapId} tpsRedo ={tpsRedo} tpsUndo ={tpsUndo} tps = {props.tps} landmarks_refetch ={landmarks_refetch} children ={children} children_refetch ={children_refetch}/>
         </Col>
       </Row>
     </Container>

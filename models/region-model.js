@@ -41,6 +41,10 @@ const regionSchema = new Schema(
     map:{
       type:String,
       required:true
+    },
+    ownerId:{
+      type:String,
+      required:true
     }
 	
 	},
