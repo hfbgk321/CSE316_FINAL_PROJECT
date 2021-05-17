@@ -52,8 +52,8 @@ export const CREATE_MAP = gql`
 `;
 
 export const ADD_NEW_REGION = gql`
-  mutation AddSubregion($pos:Int,$subregion: RegionInput,$arr:[RegionInput]){
-    addSubregion(pos:$pos,subregion: $subregion,arr:$arr){
+  mutation AddSubregion($pos:Int,$subregion: RegionInput,$arr:[RegionInput],$_id:String){
+    addSubregion(pos:$pos,subregion: $subregion,arr:$arr,_id:$_id){
       _id
 		  children
       name
@@ -69,8 +69,8 @@ export const ADD_NEW_REGION = gql`
 `;
 
 export const ADD_NEW_REGION_TO_MAP = gql`
-  mutation AddSubregionToMap($pos:Int,$subregion:RegionInput,$arr:[RegionInput]){
-    addSubregionToMap(pos:$pos,subregion:$subregion,arr:$arr){
+  mutation AddSubregionToMap($pos:Int,$subregion:RegionInput,$arr:[RegionInput],$_id:String){
+    addSubregionToMap(pos:$pos,subregion:$subregion,arr:$arr,_id:$_id){
       _id
 		  children
       name

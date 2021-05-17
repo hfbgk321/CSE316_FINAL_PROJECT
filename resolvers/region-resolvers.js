@@ -8,19 +8,19 @@ module.exports ={
   Query:{
     getRegionsByParentId: async (_,args,{res}) =>{
       let {parent_id} = args;
-      let isMap = await Map.findById({_id:parent_id});  
+      let isMap = await Map.findById({_id:new ObjectId(parent_id)});  
       let arr = [];
       if(isMap){
         for(let x = 0; x < isMap.children.length;x++){
-          let region = await Region.findById({_id:isMap.children[x]});
+          let region = await Region.findById({_id: new ObjectId(isMap.children[x])});
           arr.push(region);
         }
         return arr;
       }
-      let found = await Region.findById({_id: parent_id });
+      let found = await Region.findById({_id: new ObjectId(parent_id) });
       if(found){
         for(let x = 0; x < found.children.length;x++){
-          let region = await Region.findById({_id:found.children[x]});
+          let region = await Region.findById({_id: new ObjectId(found.children[x])});
           arr.push(region);
         }
         return arr;
@@ -77,10 +77,10 @@ module.exports ={
   
   Mutation:{
     addSubregion: async (_,args,{req}) => {
-      let {pos,subregion,arr} = args;
+      let {pos,subregion,arr,_id} = args;
       if(subregion._id.length == 0){
-        let _id = new ObjectId();
-        subregion._id = _id;
+        let id = _id.length > 0 ? new ObjectId(_id): new ObjectId();
+        subregion._id = id;
       }
       if(arr.length > 0){
         await remakeComponents(arr);
@@ -112,7 +112,7 @@ module.exports ={
     },
 
     addSubregionToMap: async (_,args,{req}) =>{
-      let {pos,subregion,arr} = args;
+      let {pos,subregion,arr,_id} = args;
       let isNewSubregion = subregion._id.length > 0;
       if(arr.length > 0){
         await remakeComponents(arr);
@@ -120,8 +120,8 @@ module.exports ={
       
       
       if(!isNewSubregion){
-        let _id = new ObjectId();
-        subregion._id = _id;
+        let id = _id.length > 0 ? new ObjectId(_id):  new ObjectId();
+        subregion._id = id;
       }
       subregion.ownerId = new ObjectId(req.userId);
       let region = new Region(subregion);
@@ -178,7 +178,8 @@ module.exports ={
 
     updateSubregionField: async (_,args,{res}) =>{
       let {_id,field,value} = args;
-      let updated = await Region.findByIdAndUpdate({_id:_id},{[field]:value},{new:true});
+      let updated = await Region.findByIdAndUpdate({_id: new ObjectId(_id)},{[field]:value},{new:true,useFindAndModify:false});
+      console.log(`_id: ${_id}, field: ${field}, value: ${value}`);
       console.log('updated: '+updated);
       return updated;
     },

@@ -24,11 +24,11 @@ const typeDefs = gql `
 		getChildren(_id:String):[Region]
 	}
 	extend type Mutation {
-    addSubregion(pos:Int,subregion: RegionInput,arr:[RegionInput]): Region
+    addSubregion(pos:Int,subregion: RegionInput,arr:[RegionInput],_id:String): Region
     deleteSubregion(_id: String):[Region]
     updateSubregionField(_id: String, field:String, value:String): Region
     updateParentRegion(currentParentId:String!, newParentId: String!, _id:String!): String
-		addSubregionToMap(pos:Int,subregion:RegionInput,arr:[RegionInput]): Region
+		addSubregionToMap(pos:Int,subregion:RegionInput,arr:[RegionInput],_id:String): Region
 		updateRegionChildren(_id:String, children: [String]): Region
 		addLandmarkToRegion(_id:String, landmark:String,pos:Int): Region
 		deleteLandmarkFromRegion(_id:String,pos:Int):Region
