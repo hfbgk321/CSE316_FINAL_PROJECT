@@ -307,7 +307,7 @@ export const RegionSpreadSheet =(props)=>{
          
           <tbody>
             
-            {subregion_loading ? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
+            {subregion_loading? <div style={{position:"relative",left:550,top:140}}><LineScalePulseOutRapid color={'#123abc'} loading={true}/></div> : subregions.map((subregion,key)=>{
               return(
                 <Subregion region_name ={mapInfo.name}pos ={key} _id ={subregion._id} name ={subregion.name} leader ={subregion.leader} flag ={subregion.flag} landmarks ={subregion.landmarks} parent_id ={parent_id} capital = {subregion.capital} history = {props.history} updateSubregion ={updateSubregion} tps ={props.tps} AddOrDeleteSubregion ={AddOrDeleteSubregion} isParentAMap ={subregion.isParentAMap} children ={subregion.children} map ={map_id} focusPos ={focusPos} previousPaths ={previousPaths} currentCol ={currentCol} setCurrentCol ={setCurrentCol} prevCol ={prevCol} setFocusPos ={setFocusPos} setPrevCol ={setPrevCol}/>
               )

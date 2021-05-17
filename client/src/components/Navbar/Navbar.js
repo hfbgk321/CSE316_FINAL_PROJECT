@@ -12,13 +12,13 @@ const LoggedIn =(props) =>{
 	const [Logout] = useMutation(LOGOUT);
 
     const handleLogout = async (e) => {
+        window.location = "/welcome";
         Logout();
 
         const { data } = await props.fetchUser();
         if (data) {
             await client.resetStore();
         }
-        props.history.push("/your_maps");
     };
 
   return (
